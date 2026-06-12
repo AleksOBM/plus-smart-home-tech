@@ -1,4 +1,193 @@
 @namespace("ru.yandex.practicum.kafka.telemetry.event")
 protocol HubEventProtocol {
 
+	/**
+	  * Перечисление типов устройств,
+	  * которые могут быть добавлены в систему.
+	*/
+	enum DeviceTypeAvro {
+		MOTION_SENSOR,
+		TEMPERATURE_SENSOR,
+		LIGHT_SENSOR,
+		CLIMATE_SENSOR,
+		SWITCH_SENSOR
+	}
+
+	/**
+	  * Типы условий, которые могут
+	  * использоваться в сценариях.
+	*/
+	enum ConditionTypeAvro {
+		MOTION,
+		LUMINOSITY,
+		SWITCH,
+		TEMPERATURE,
+		CO2LEVEL,
+		HUMIDITY
+	}
+
+	/**
+	  * Операции, которые могут быть
+	  * использованы в условиях.
+	*/
+	enum ConditionOperationAvro {
+		EQUALS,
+		GREATER_THAN,
+		LOWER_THAN
+	}
+
+	/**
+	  * Перечисление возможных типов
+	  * действий при срабатывании условия
+	  * активации сценария.
+	*/
+	enum ActionTypeAvro {
+		ACTIVATE,
+		DEACTIVATE,
+		INVERSE,
+		SET_VALUE
+	}
+
+	/** Перечисление типов событий хаба. */
+	enum HubEventTypeAvro {
+		DEVICE_ADDED,
+		DEVICE_REMOVED,
+		SCENARIO_ADDED,
+		SCENARIO_REMOVED
+	}
+
+	/**
+	  * Условие сценария, которое содержит
+	  * информацию о датчике, типе условия,
+	  * операции и значении.
+	*/
+	record ScenarioConditionAvro {
+
+		/**
+		  * Идентификатор датчика,
+		  * связанного с условием.
+		*/
+		string sensorId;
+
+		/** Тип условия сценария. */
+		ConditionTypeAvro type;
+
+		/** Используемая в условии операция. */
+		ConditionOperationAvro operation;
+
+		/** Значение, используемое в условии. */
+		int? value;
+	}
+
+	/**
+	  * Представляет действие, которое
+	  * должно быть выполнено устройством.
+	*/
+	record DeviceActionAvro {
+
+		/**
+		  * Идентификатор датчика,
+		  * связанного с действием.
+		*/
+		string sensorId;
+
+		/**
+		  * Действие при срабатывании
+		  * условия активации сценария.
+		*/
+		ActionTypeAvro type;
+
+		/**
+		  * Необязательное значение,
+		  * связанное с действием.
+		*/
+		int? value;
+	}
+
+	/**
+	  * Событие, сигнализирующее о
+	  * добавлении нового устройства
+	  * в систему.
+	*/
+	record DeviceAddedEventAvro {
+
+		/** Идентификатор устройства. */
+		string id;
+
+		/** Тип устройства. */
+		DeviceTypeAvro deviceType;
+	}
+
+	/**
+	  * Событие, сигнализирующее о
+	  * удалении устройства из системы.
+	*/
+	record DeviceRemovedEventAvro {
+
+		/** Идентификатор устройства. */
+		string id;
+
+		/** Тип устройства. */
+		DeviceTypeAvro deviceType;
+	}
+
+	/**
+	  * Событие добавления сценария в систему.
+	  * Содержит информацию о названии сценария,
+	  * условиях и действиях.
+	*/
+	record ScenarioAddedEventAvro {
+
+		/**
+		  * Название добавленного сценария.
+		  * Должно содержать не менее 3 символов.
+		*/
+		string name;
+
+		/**
+		  * Список условий, которые связаны
+		  * со сценарием. Не может быть пустым.
+		*/
+		array<ScenarioConditionAvro> conditions;
+
+		/**
+		  * Список действий, которые должны
+		  * быть выполнены в рамках сценария.
+		  * Не может быть пустым.
+		*/
+		array<DeviceActionAvro> actions;
+	}
+
+	/**
+	  * Событие удаления сценария из системы.
+	  * Содержит информацию о названии
+	  * удаленного сценария.
+	*/
+	record ScenarioRemovedEventAvro {
+
+		/**
+		  * Название удаленного сценария.
+		  * Должно содержать не менее 3 символов.
+		*/
+		string name;
+	}
+
+	/** Любое событие хаба. */
+	record HubEventAvro {
+
+		/** Идентификатор хаба, связанного с событием. */
+		string hubId;
+
+		/** Временная метка события. */
+		timestamp_ms timestamp;
+
+		/** Событие хаба. */
+		union{
+			DeviceAddedEventAvro,
+			DeviceRemovedEventAvro,
+			ScenarioAddedEventAvro,
+			ScenarioRemovedEventAvro
+		} payload;
+	}
+
 }

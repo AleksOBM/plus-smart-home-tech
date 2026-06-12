@@ -1,0 +1,9 @@
+server.port: 8080
+
+spring:
+  application.name: Collector
+
+sht.servers.bootstrap: localhost:9092
+sht.telemetry.topics:
+  sensors: telemetry.sensors.v1
+  hubs: telemetry.hubs.v1
