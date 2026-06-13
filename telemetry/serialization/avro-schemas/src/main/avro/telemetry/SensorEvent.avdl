@@ -1,4 +1,108 @@
 @namespace("ru.yandex.practicum.kafka.telemetry.event")
 protocol SensorEventProtocol {
 
+	/**
+	  * Перечисление типов событий датчиков.
+	  * Определяет различные типы событий,
+	  * которые могут быть связаны с датчиками.
+	*/
+	enum SensorEventTypeAvro {
+		LIGHT_SENSOR_EVENT,
+		MOTION_SENSOR_EVENT,
+		TEMPERATURE_SENSOR_EVENT,
+		CLIMATE_SENSOR_EVENT,
+		SWITCH_SENSOR_EVENT
+	}
+
+	/**
+	  * Событие датчика освещенности,
+	  * содержащее информацию о качестве
+	  * связи и уровне освещенности.
+	*/
+	record LightSensorEventAvro {
+
+		/** Качество связи. */
+		int linkQuality;
+
+		/** Уровень освещенности. */
+		int luminosity;
+	}
+
+	/** Событие датчика движения. */
+	record MotionSensorEventAvro {
+
+		/** Качество связи. */
+		int linkQuality;
+
+		/** Наличие/отсутствие движения. */
+		boolean motion;
+
+		/** Напряжение. */
+		int voltage;
+	}
+
+	/**
+	  * Событие датчика температуры,
+	  * содержащее информацию о температуре
+	  * в градусах Цельсия и Фаренгейта.
+	*/
+	record TemperatureSensorEventAvro {
+
+		/** Уровень температуры по шкале Цельсия. */
+		int temperatureC;
+
+		/** Температура в градусах Фаренгейта. */
+		int temperatureF;
+	}
+
+	/**
+	  * Событие климатического датчика,
+	  * содержащее информацию о температуре,
+	  * влажности и уровне CO2.
+	*/
+	record ClimateSensorEventAvro {
+
+		/** Уровень температуры по шкале Цельсия. */
+		int temperatureC;
+
+		/** Влажность. */
+		int humidity;
+
+		/** Уровень CO2. */
+		int co2Level;
+	}
+
+	/**
+	  * Событие датчика переключателя,
+	  * содержащее информацию о текущем
+	  * состоянии переключателя.
+	*/
+	record SwitchSensorEventAvro {
+
+		/** Текущее состояние переключателя. */
+		boolean state;
+	}
+
+	/** Любое событие сенсора. */
+	record SensorEventAvro {
+
+		/** Идентификатор события датчика. */
+		string id;
+
+		/** Идентификатор хаба, связанного с событием. */
+		string hubId;
+
+		/** Временная метка события. */
+		timestamp_ms timestamp;
+
+		/** Событие датчика. */
+		union {
+			ClimateSensorEventAvro,
+			LightSensorEventAvro,
+			MotionSensorEventAvro,
+			SwitchSensorEventAvro,
+			TemperatureSensorEventAvro
+		} payload;
+	}
+
 }
