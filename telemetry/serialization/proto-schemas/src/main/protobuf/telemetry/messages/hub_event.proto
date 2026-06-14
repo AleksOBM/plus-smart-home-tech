@@ -2,5 +2,166 @@ syntax = "proto3";
 
 package telemetry.message.event;
 
+import "google/protobuf/timestamp.proto";
+
 option java_multiple_files = true;
 option java_package = "ru.yandex.practicum.grpc.telemetry.event";
+
+/** Любое событие хаба. */
+message HubEventProto {
+  string hub_id = 1; // Идентификатор хаба, связанного с событием.
+  google.protobuf.Timestamp timestamp = 2; // Временная метка события.
+  oneof payload { // Событие хаба.
+    DeviceAddedEventProto device_added = 3;         // добавление устройства
+    DeviceRemovedEventProto device_removed = 4;     // удаление устройства
+    ScenarioAddedEventProto scenario_added = 5;     // добавление нового сценария
+    ScenarioRemovedEventProto scenario_removed = 6; // удаления сценария
+  }
+}
+
+/**
+  * Условие сценария, которое содержит
+  * информацию о датчике, типе условия,
+  * операции и значении.
+  */
+message ScenarioConditionProto {
+  string sensor_id = 1; // Идентификатор датчика, связанного с условием.
+  ConditionTypeProto type = 2; // Тип условия сценария.
+  ConditionOperationProto operation = 3; // Используемая в условии операция.
+  oneof value { // Значение, используемое в условии.
+    bool bool_value = 4;
+    int32 int_value = 5;
+  }
+}
+
+/**
+  * Представляет действие, которое
+  * должно быть выполнено устройством.
+  */
+message DeviceActionProto {
+  string sensor_id = 1; // Идентификатор датчика, связанного с действием.
+  ActionTypeProto type = 2; // Действие при срабатывании условия активации сценария.
+  optional int32 value = 4; // Необязательное значение, связанное с действием.
+}
+
+/**
+  * Событие, сигнализирующее о
+  * добавлении нового устройства
+  * в систему.
+  */
+message DeviceAddedEventProto {
+  string id = 1; // Идентификатор устройства.
+  DeviceTypeProto device_type = 2; // Тип устройства.
+}
+
+/**
+  * Событие, сигнализирующее о
+  * удалении устройства из системы.
+  */
+message DeviceRemovedEventProto {
+  string id = 1; // Идентификатор устройства.
+  DeviceTypeProto device_type = 2; // Тип устройства.
+}
+
+/**
+  * Событие добавления сценария в систему.
+  * Содержит информацию о названии сценария,
+  * условиях и действиях.
+  */
+message ScenarioAddedEventProto {
+
+  /**
+    * Название добавленного сценария.
+    * Должно содержать не менее 3 символов.
+    */
+  string name = 1;
+
+  /**
+    * Список условий, которые связаны
+    * со сценарием. Не может быть пустым.
+    */
+  repeated ScenarioConditionProto conditions = 2;
+
+  /**
+    * Список действий, которые должны
+    * быть выполнены в рамках сценария.
+    * Не может быть пустым.
+  */
+  repeated DeviceActionProto actions = 3;
+}
+
+/**
+  * Событие удаления сценария из системы.
+  * Содержит информацию о названии
+  * удаленного сценария.
+  */
+message ScenarioRemovedEventProto {
+
+  /**
+    * Название удаленного сценария.
+    * Должно содержать не менее 3 символов.
+    */
+  string name = 1;
+}
+
+/**
+  * Перечисление типов устройств,
+  * которые могут быть добавлены в систему.
+  */
+enum DeviceTypeProto {
+  DEVICE_TYPE_UNSPECIFIED = 0;
+  DEVICE_TYPE_MOTION_SENSOR = 1;
+  DEVICE_TYPE_TEMPERATURE_SENSOR = 2;
+  DEVICE_TYPE_LIGHT_SENSOR = 3;
+  DEVICE_TYPE_CLIMATE_SENSOR = 4;
+  DEVICE_TYPE_SWITCH_SENSOR = 5;
+}
+
+/**
+  * Типы условий, которые могут
+  * использоваться в сценариях.
+  */
+enum ConditionTypeProto {
+  CONDITION_TYPE_UNSPECIFIED = 0;
+  CONDITION_TYPE_MOTION = 1;
+  CONDITION_TYPE_LUMINOSITY = 2;
+  CONDITION_TYPE_SWITCH = 3;
+  CONDITION_TYPE_TEMPERATURE = 4;
+  CONDITION_TYPE_CO2LEVEL = 5;
+  CONDITION_TYPE_HUMIDITY = 6;
+}
+
+/**
+  * Операции, которые могут быть
+  * использованы в условиях.
+  */
+enum ConditionOperationProto {
+  CONDITION_OPERATION_UNSPECIFIED = 0;
+  CONDITION_OPERATION_EQUALS = 1;
+  CONDITION_OPERATION_GREATER_THAN = 2;
+  CONDITION_OPERATION_LOWER_THAN = 3;
+}
+
+/**
+  * Перечисление возможных типов
+  * действий при срабатывании условия
+  * активации сценария.
+  */
+enum ActionTypeProto {
+  ACTION_TYPE_UNSPECIFIED = 0;
+  ACTION_TYPE_ACTIVATE = 1;
+  ACTION_TYPE_DEACTIVATE = 2;
+  ACTION_TYPE_INVERSE = 3;
+  ACTION_TYPE_SET_VALUE = 4;
+}
+
+/**
+  * Перечисление типов событий хаба.
+  */
+enum HubEventTypeProto {
+  HUB_EVENT_TYPE_UNSPECIFIED = 0;
+  HUB_EVENT_TYPE_DEVICE_ADDED = 1;
+  HUB_EVENT_TYPE_DEVICE_REMOVED = 2;
+  HUB_EVENT_TYPE_SCENARIO_ADDED = 3;
+  HUB_EVENT_TYPE_SCENARIO_REMOVED = 4;
+}

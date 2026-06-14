@@ -2,5 +2,83 @@ syntax = "proto3";
 
 package telemetry.message.event;
 
+import "google/protobuf/timestamp.proto";
+
 option java_multiple_files = true;
 option java_package = "ru.yandex.practicum.grpc.telemetry.event";
+
+/** Любое событие сенсора. */
+message SensorEventProto {
+  string id = 1; // Идентификатор события датчика.
+  string hubId = 2; // Идентификатор хаба, связанного с событием.
+  google.protobuf.Timestamp timestamp = 3; // Временная метка события.
+  oneof payload { // Событие датчика.
+    MotionSensorEventProto motion_sensor = 4;           // датчика движения
+    TemperatureSensorEventProto temperature_sensor = 5; // температурного датчика
+    LightSensorEventProto light_sensor = 6;             // датчика освещения
+    ClimateSensorEventProto climate_sensor = 7;         // климатического датчика
+    SwitchSensorEventProto switch_sensor = 8;           // датчика-переключателя
+  }
+}
+
+/** Событие датчика движения. */
+message MotionSensorEventProto {
+  int32 linkQuality = 1; // Качество связи.
+  bool motion = 2; // Наличие/отсутствие движения.
+  int32 voltage = 3; // Напряжение.
+}
+
+/**
+  * Событие датчика температуры,
+  * содержащее информацию о температуре
+  * в градусах Цельсия и Фаренгейта.
+  */
+message TemperatureSensorEventProto {
+  int32 temperatureC = 1; // Уровень температуры по шкале Цельсия.
+  int32 temperatureF = 2; // Температура в градусах Фаренгейта.
+}
+
+/**
+  * Событие датчика освещенности,
+  * содержащее информацию о качестве
+  * связи и уровне освещенности.
+  */
+message LightSensorEventProto {
+  int32 linkQuality = 1; // Качество связи.
+  int32 luminosity = 2; // Уровень освещенности.
+}
+
+/**
+  * Событие климатического датчика,
+  * содержащее информацию о температуре,
+  * влажности и уровне CO2.
+  */
+message ClimateSensorEventProto {
+  int32 temperatureC = 1; // Уровень температуры по шкале Цельсия.
+  int32 humidity = 2; // Влажность.
+  int32 co2Level = 3; // Уровень CO2.
+}
+
+/**
+  * Событие датчика переключателя,
+  * содержащее информацию о текущем
+  * состоянии переключателя.
+  */
+message SwitchSensorEventProto {
+  bool state = 1; // Текущее состояние переключателя.
+}
+
+/**
+  * Перечисление типов событий датчиков.
+  * Определяет различные типы событий,
+  * которые могут быть связаны с датчиками.
+  */
+enum SensorEventTypeProto {
+  SENSOR_EVENT_TYPE_UNSPECIFIED = 0;
+  SENSOR_EVENT_TYPE_MOTION_SENSOR_EVENT = 1;
+  SENSOR_EVENT_TYPE_TEMPERATURE_SENSOR_EVENT = 2;
+  SENSOR_EVENT_TYPE_LIGHT_SENSOR_EVENT = 3;
+  SENSOR_EVENT_TYPE_CLIMATE_SENSOR_EVENT = 4;
+  SENSOR_EVENT_TYPE_SWITCH_SENSOR_EVENT = 5;
+}
+
