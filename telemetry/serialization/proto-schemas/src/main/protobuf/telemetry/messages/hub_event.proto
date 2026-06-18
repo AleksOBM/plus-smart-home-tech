@@ -12,10 +12,10 @@ message HubEventProto {
   string hub_id = 1; // Идентификатор хаба, связанного с событием.
   google.protobuf.Timestamp timestamp = 2; // Временная метка события.
   oneof payload { // Событие хаба.
-    DeviceAddedEventProto device_added = 3;         // добавление устройства
-    DeviceRemovedEventProto device_removed = 4;     // удаление устройства
-    ScenarioAddedEventProto scenario_added = 5;     // добавление нового сценария
-    ScenarioRemovedEventProto scenario_removed = 6; // удаления сценария
+    DeviceAddedEventProto device_added_event = 3;         // добавление устройства
+    DeviceRemovedEventProto device_removed_event = 4;     // удаление устройства
+    ScenarioAddedEventProto scenario_added_event = 5;     // добавление нового сценария
+    ScenarioRemovedEventProto scenario_removed_event = 6; // удаления сценария
   }
 }
 
@@ -109,12 +109,11 @@ message ScenarioRemovedEventProto {
   * которые могут быть добавлены в систему.
   */
 enum DeviceTypeProto {
-  DEVICE_TYPE_UNSPECIFIED = 0;
-  DEVICE_TYPE_MOTION_SENSOR = 1;
-  DEVICE_TYPE_TEMPERATURE_SENSOR = 2;
-  DEVICE_TYPE_LIGHT_SENSOR = 3;
-  DEVICE_TYPE_CLIMATE_SENSOR = 4;
-  DEVICE_TYPE_SWITCH_SENSOR = 5;
+  MOTION_SENSOR = 0;
+  TEMPERATURE_SENSOR = 1;
+  LIGHT_SENSOR = 2;
+  CLIMATE_SENSOR = 3;
+  SWITCH_SENSOR = 4;
 }
 
 /**
@@ -122,13 +121,12 @@ enum DeviceTypeProto {
   * использоваться в сценариях.
   */
 enum ConditionTypeProto {
-  CONDITION_TYPE_UNSPECIFIED = 0;
-  CONDITION_TYPE_MOTION = 1;
-  CONDITION_TYPE_LUMINOSITY = 2;
-  CONDITION_TYPE_SWITCH = 3;
-  CONDITION_TYPE_TEMPERATURE = 4;
-  CONDITION_TYPE_CO2LEVEL = 5;
-  CONDITION_TYPE_HUMIDITY = 6;
+  MOTION = 0;
+  LUMINOSITY = 1;
+  SWITCH = 2;
+  TEMPERATURE = 3;
+  CO2LEVEL = 4;
+  HUMIDITY = 5;
 }
 
 /**
@@ -136,10 +134,9 @@ enum ConditionTypeProto {
   * использованы в условиях.
   */
 enum ConditionOperationProto {
-  CONDITION_OPERATION_UNSPECIFIED = 0;
-  CONDITION_OPERATION_EQUALS = 1;
-  CONDITION_OPERATION_GREATER_THAN = 2;
-  CONDITION_OPERATION_LOWER_THAN = 3;
+  EQUALS = 0;
+  GREATER_THAN = 1;
+  LOWER_THAN = 2;
 }
 
 /**
@@ -148,20 +145,8 @@ enum ConditionOperationProto {
   * активации сценария.
   */
 enum ActionTypeProto {
-  ACTION_TYPE_UNSPECIFIED = 0;
-  ACTION_TYPE_ACTIVATE = 1;
-  ACTION_TYPE_DEACTIVATE = 2;
-  ACTION_TYPE_INVERSE = 3;
-  ACTION_TYPE_SET_VALUE = 4;
-}
-
-/**
-  * Перечисление типов событий хаба.
-  */
-enum HubEventTypeProto {
-  HUB_EVENT_TYPE_UNSPECIFIED = 0;
-  HUB_EVENT_TYPE_DEVICE_ADDED = 1;
-  HUB_EVENT_TYPE_DEVICE_REMOVED = 2;
-  HUB_EVENT_TYPE_SCENARIO_ADDED = 3;
-  HUB_EVENT_TYPE_SCENARIO_REMOVED = 4;
+  ACTIVATE = 0;
+  DEACTIVATE = 1;
+  INVERSE = 2;
+  SET_VALUE = 3;
 }
