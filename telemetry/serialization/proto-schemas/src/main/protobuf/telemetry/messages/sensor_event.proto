@@ -13,11 +13,11 @@ message SensorEventProto {
   string hub_id = 2; // Идентификатор хаба, связанного с событием.
   google.protobuf.Timestamp timestamp = 3; // Временная метка события.
   oneof payload { // Событие датчика.
-    MotionSensorProto motion_sensor_event = 4;           // датчика движения
-    TemperatureSensorProto temperature_sensor_event = 5; // температурного датчика
-    LightSensorProto light_sensor_event = 6;             // датчика освещения
-    ClimateSensorProto climate_sensor_event = 7;         // климатического датчика
-    SwitchSensorProto switch_sensor_event = 8;           // датчика-переключателя
+    MotionSensorProto motion_sensor = 4;           // датчика движения
+    TemperatureSensorProto temperature_sensor = 5; // температурного датчика
+    LightSensorProto light_sensor = 6;             // датчика освещения
+    ClimateSensorProto climate_sensor = 7;         // климатического датчика
+    SwitchSensorProto switch_sensor = 8;           // датчика-переключателя
   }
 }
 

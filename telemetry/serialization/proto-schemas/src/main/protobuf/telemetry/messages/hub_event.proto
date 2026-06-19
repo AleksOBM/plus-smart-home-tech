@@ -12,10 +12,10 @@ message HubEventProto {
   string hub_id = 1; // Идентификатор хаба, связанного с событием.
   google.protobuf.Timestamp timestamp = 2; // Временная метка события.
   oneof payload { // Событие хаба.
-    DeviceAddedEventProto device_added_event = 3;         // добавление устройства
-    DeviceRemovedEventProto device_removed_event = 4;     // удаление устройства
-    ScenarioAddedEventProto scenario_added_event = 5;     // добавление нового сценария
-    ScenarioRemovedEventProto scenario_removed_event = 6; // удаления сценария
+    DeviceAddedEventProto device_added = 3;         // добавление устройства
+    DeviceRemovedEventProto device_removed = 4;     // удаление устройства
+    ScenarioAddedEventProto scenario_added = 5;     // добавление нового сценария
+    ScenarioRemovedEventProto scenario_removed = 6; // удаления сценария
   }
 }
 

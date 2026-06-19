@@ -6,6 +6,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import lombok.experimental.SuperBuilder;
 import ru.yandex.practicum.kafka.telemetry.event.*;
 import ru.yandex.practicum.telemetry.collector.model.Event;
 import ru.yandex.practicum.telemetry.collector.model.hub.data.HubEventType;
@@ -17,6 +18,7 @@ import ru.yandex.practicum.telemetry.collector.model.hub.events.ScenarioRemovedE
 @NotNull
 @Getter
 @Setter
+@SuperBuilder
 @ToString(callSuper = true)
 @JsonTypeInfo(
 		use = JsonTypeInfo.Id.NAME,
