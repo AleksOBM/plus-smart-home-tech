@@ -2,6 +2,7 @@ package ru.yandex.practicum.telemetry.collector.model;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
@@ -19,5 +20,6 @@ public abstract class Event {
 
 	/** Временная метка события. */
 	@NotNull
+	@Builder.Default
 	private Instant timestamp = Instant.now();
 }

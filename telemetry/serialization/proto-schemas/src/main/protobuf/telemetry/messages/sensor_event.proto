@@ -10,8 +10,8 @@ option java_package = "ru.yandex.practicum.grpc.telemetry.event";
 /** Любое событие сенсора. */
 message SensorEventProto {
   string id = 1; // Идентификатор события датчика.
-  string hub_id = 2; // Идентификатор хаба, связанного с событием.
-  google.protobuf.Timestamp timestamp = 3; // Временная метка события.
+  google.protobuf.Timestamp timestamp = 2; // Временная метка события.
+  string hub_id = 3; // Идентификатор хаба, связанного с событием.
   oneof payload { // Событие датчика.
     MotionSensorProto motion_sensor = 4;           // датчика движения
     TemperatureSensorProto temperature_sensor = 5; // температурного датчика

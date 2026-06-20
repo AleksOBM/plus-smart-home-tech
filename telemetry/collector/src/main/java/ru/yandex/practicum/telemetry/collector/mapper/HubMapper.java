@@ -110,23 +110,23 @@ public class HubMapper {
 				.hubId(eventProto.getHubId())
 				.timestamp(CollectorUtils.toInstant(eventProto.getTimestamp()))
 				.name(proto.getName())
-				.conditions(proto.getConditionsList().stream().map(conditionProto -> {
-									return ScenarioCondition.builder()
-											.sensorId(conditionProto.getSensorId())
-											.type(ConditionType.valueOf(conditionProto.getType().name()))
-											.operation(ConditionOperation.valueOf(conditionProto.getOperation().name()))
-											.value(conditionProto.getIntValue())
-											.build();
-								}
+				.conditions(proto.getConditionsList().stream().map(conditionProto ->
+								ScenarioCondition.builder()
+										.sensorId(conditionProto.getSensorId())
+										.type(ConditionType.valueOf(conditionProto.getType().name()))
+										.operation(ConditionOperation.valueOf(conditionProto.getOperation().name()))
+										.value(conditionProto.hasIntValue() ? conditionProto.getIntValue() :
+												(conditionProto.getBoolValue() ? 1 : 0)
+										)
+										.build()
 						).toList()
 				)
-				.actions(proto.getActionsList().stream().map(deviceActionProto -> {
-									return DeviceAction.builder()
-											.sensorId(deviceActionProto.getSensorId())
-											.type(ActionType.valueOf(deviceActionProto.getType().name()))
-											.value(deviceActionProto.getValue())
-											.build();
-								}
+				.actions(proto.getActionsList().stream().map(deviceActionProto ->
+								DeviceAction.builder()
+										.sensorId(deviceActionProto.getSensorId())
+										.type(ActionType.valueOf(deviceActionProto.getType().name()))
+										.value(deviceActionProto.getValue())
+										.build()
 
 						).toList()
 				)
