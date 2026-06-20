@@ -6,6 +6,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.experimental.SuperBuilder;
 import ru.yandex.practicum.kafka.telemetry.event.*;
 import ru.yandex.practicum.telemetry.collector.model.Event;
 import ru.yandex.practicum.telemetry.collector.model.sensor.data.SensorEventType;
@@ -14,6 +15,7 @@ import ru.yandex.practicum.telemetry.collector.model.sensor.events.*;
 @NotNull
 @Getter
 @Setter
+@SuperBuilder
 @JsonTypeInfo(
         use = JsonTypeInfo.Id.NAME,
         include = JsonTypeInfo.As.EXISTING_PROPERTY,

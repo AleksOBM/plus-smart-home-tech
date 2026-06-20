@@ -2,12 +2,14 @@ package ru.yandex.practicum.telemetry.collector.model.hub.events;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.experimental.SuperBuilder;
 import ru.yandex.practicum.telemetry.collector.model.hub.HubEvent;
 import ru.yandex.practicum.telemetry.collector.model.hub.data.DeviceType;
 import ru.yandex.practicum.telemetry.collector.model.hub.data.HubEventType;
 
 @Getter
 @Setter
+@SuperBuilder
 public class DeviceAddedEvent extends HubEvent {
 
 	/** Идентификатор устройства. */
