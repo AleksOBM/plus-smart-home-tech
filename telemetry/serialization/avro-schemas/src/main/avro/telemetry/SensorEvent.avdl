@@ -19,7 +19,7 @@ protocol SensorEventProtocol {
 	  * содержащее информацию о качестве
 	  * связи и уровне освещенности.
 	*/
-	record LightSensorEventAvro {
+	record LightSensorAvro {
 
 		/** Качество связи. */
 		int linkQuality;
@@ -29,7 +29,7 @@ protocol SensorEventProtocol {
 	}
 
 	/** Событие датчика движения. */
-	record MotionSensorEventAvro {
+	record MotionSensorAvro {
 
 		/** Качество связи. */
 		int linkQuality;
@@ -46,7 +46,7 @@ protocol SensorEventProtocol {
 	  * содержащее информацию о температуре
 	  * в градусах Цельсия и Фаренгейта.
 	*/
-	record TemperatureSensorEventAvro {
+	record TemperatureSensorAvro {
 
 		/** Уровень температуры по шкале Цельсия. */
 		int temperatureC;
@@ -60,7 +60,7 @@ protocol SensorEventProtocol {
 	  * содержащее информацию о температуре,
 	  * влажности и уровне CO2.
 	*/
-	record ClimateSensorEventAvro {
+	record ClimateSensorAvro {
 
 		/** Уровень температуры по шкале Цельсия. */
 		int temperatureC;
@@ -77,7 +77,7 @@ protocol SensorEventProtocol {
 	  * содержащее информацию о текущем
 	  * состоянии переключателя.
 	*/
-	record SwitchSensorEventAvro {
+	record SwitchSensorAvro {
 
 		/** Текущее состояние переключателя. */
 		boolean state;
@@ -97,11 +97,11 @@ protocol SensorEventProtocol {
 
 		/** Событие датчика. */
 		union {
-			ClimateSensorEventAvro,
-			LightSensorEventAvro,
-			MotionSensorEventAvro,
-			SwitchSensorEventAvro,
-			TemperatureSensorEventAvro
+			ClimateSensorAvro,
+			LightSensorAvro,
+			MotionSensorAvro,
+			SwitchSensorAvro,
+			TemperatureSensorAvro
 		} payload;
 	}
 

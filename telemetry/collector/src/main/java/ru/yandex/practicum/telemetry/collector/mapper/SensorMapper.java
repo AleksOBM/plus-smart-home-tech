@@ -30,38 +30,38 @@ public class SensorMapper {
 		return sensorEventAvro.build();
 	}
 
-	private LightSensorEventAvro toLightSensorAvro(@Nonnull LightSensorEvent sensorEvent) {
-		return LightSensorEventAvro.newBuilder()
+	private LightSensorAvro toLightSensorAvro(@Nonnull LightSensorEvent sensorEvent) {
+		return LightSensorAvro.newBuilder()
 				.setLinkQuality(sensorEvent.getLinkQuality())
 				.setLuminosity(sensorEvent.getLuminosity())
 				.build();
 	}
 
-	private MotionSensorEventAvro toMotionSensorAvro(@Nonnull MotionSensorEvent sensorEvent) {
-		return MotionSensorEventAvro.newBuilder()
+	private MotionSensorAvro toMotionSensorAvro(@Nonnull MotionSensorEvent sensorEvent) {
+		return MotionSensorAvro.newBuilder()
 				.setLinkQuality(sensorEvent.getLinkQuality())
 				.setMotion(sensorEvent.getMotion())
 				.setVoltage(sensorEvent.getVoltage())
 				.build();
 	}
 
-	private TemperatureSensorEventAvro toTemperatureSensorAvro(@Nonnull TemperatureSensorEvent sensorEvent) {
-		return TemperatureSensorEventAvro.newBuilder()
+	private TemperatureSensorAvro toTemperatureSensorAvro(@Nonnull TemperatureSensorEvent sensorEvent) {
+		return TemperatureSensorAvro.newBuilder()
 				.setTemperatureC(sensorEvent.getTemperatureC())
 				.setTemperatureF(sensorEvent.getTemperatureF())
 				.build();
 	}
 
-	private ClimateSensorEventAvro toClimateSensorAvro(@Nonnull ClimateSensorEvent sensorEvent) {
-		return ClimateSensorEventAvro.newBuilder()
+	private ClimateSensorAvro toClimateSensorAvro(@Nonnull ClimateSensorEvent sensorEvent) {
+		return ClimateSensorAvro.newBuilder()
 				.setTemperatureC(sensorEvent.getTemperatureC())
 				.setCo2Level(sensorEvent.getCo2Level())
 				.setHumidity(sensorEvent.getHumidity())
 				.build();
 	}
 
-	private SwitchSensorEventAvro toSwitchSensorAvro(@Nonnull SwitchSensorEvent sensorEvent) {
-		return SwitchSensorEventAvro.newBuilder()
+	private SwitchSensorAvro toSwitchSensorAvro(@Nonnull SwitchSensorEvent sensorEvent) {
+		return SwitchSensorAvro.newBuilder()
 				.setState(sensorEvent.getState())
 				.build();
 	}
