@@ -16,7 +16,7 @@ public class GeneralAvroSerializer implements Serializer<SpecificRecordBase> {
 
 	@Override
 	public byte[] serialize(String topic, SpecificRecordBase data) {
-		if(data == null) {
+		if (data == null) {
 			return null;
 		}
 
