@@ -1,0 +1,11 @@
+package ru.yandex.practicum.telemetry.analyzer.repository;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import ru.yandex.practicum.telemetry.analyzer.model.Condition;
+
+import java.util.Optional;
+import java.util.Set;
+
+public interface ConditionRepository extends JpaRepository<Condition, Long> {
+
+}

@@ -13,15 +13,16 @@ import java.util.Optional;
 @Service
 public class SensorAggregatorService implements AggregatorService {
 
-	/**
-	 * Map <hubId, snapshot>
-	 */
+	/// Map <hubId, snapshot>
 	private final Map<String, SensorsSnapshotAvro> snapshots = new HashMap<>();
 
 	@Override
 	public Optional<SensorsSnapshotAvro> updateState(@NonNull SensorEventAvro event) {
 
-		var snapshot = snapshots.computeIfAbsent(
+		// Если это новый хаб - добавляем его id и пустой снапшот,
+		// иначе - находим имеющийся снапшот с таким id.
+		// Достаем снапшот по id хаба.
+		var shot = snapshots.computeIfAbsent(
 				event.getHubId(),
 				hubId -> SensorsSnapshotAvro.newBuilder()
 						.setHubId(hubId)
@@ -30,22 +31,24 @@ public class SensorAggregatorService implements AggregatorService {
 						.build()
 		);
 
-		var currentState = snapshot.getSensorsState().get(event.getId());
+		// Получаем состояния всех датчиков из снапшота
+		Map<String, SensorStateAvro> states = shot.getSensorsState();
 
-		// Игнорируем устаревшие события и дубликаты.
+		// Ищем состояние события по id события
+		var currentState = states.get(event.getId());
+
+		// Если состояние не менялось - возвращаем пустой ответ
 		if (currentState != null && checkState(currentState, event)) {
 			return Optional.empty();
 		}
 
-		snapshot.getSensorsState().put(
-				event.getId(),
-				buildState(event)
-		);
+		// Если состояние изменилось - заменяем на новое
+		states.put(event.getId(), buildState(event));
 
-		// Время последнего изменения snapshot.
-		snapshot.setTimestamp(event.getTimestamp());
+		// Обновляем время последнего изменения снапшота.
+		shot.setTimestamp(event.getTimestamp());
 
-		return Optional.of(snapshot);
+		return Optional.of(shot);
 	}
 
 	private SensorStateAvro buildState(@NonNull SensorEventAvro event) {

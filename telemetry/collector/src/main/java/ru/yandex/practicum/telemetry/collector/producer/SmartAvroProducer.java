@@ -1,15 +1,15 @@
 package ru.yandex.practicum.telemetry.collector.producer;
 
-import jakarta.annotation.Nonnull;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.avro.specific.SpecificRecordBase;
 import org.apache.kafka.clients.producer.*;
 import org.apache.kafka.common.serialization.StringSerializer;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-import ru.yandex.practicum.kafka.serializer.GeneralAvroSerializer;
 import ru.yandex.practicum.telemetry.collector.model.Event;
+import ru.yandex.practicum.kafka.serializer.GeneralAvroSerializer;
 
+import javax.annotation.Nonnull;
 import java.util.Properties;
 import java.util.concurrent.CompletableFuture;
 
@@ -47,6 +47,7 @@ public class SmartAvroProducer {
 
 		CompletableFuture<RecordMetadata> future = new CompletableFuture<>();
 
+		log.info("Отправляю сообщение:\n{}", record.value());
 		producer.send(record, (metadata, exception) -> {
 			if (exception != null) {
 				future.completeExceptionally(exception);
