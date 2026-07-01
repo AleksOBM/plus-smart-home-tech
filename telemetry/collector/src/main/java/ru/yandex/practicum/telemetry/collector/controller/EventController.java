@@ -4,8 +4,11 @@ import com.google.protobuf.Empty;
 import io.grpc.Status;
 import io.grpc.StatusRuntimeException;
 import io.grpc.stub.StreamObserver;
+import lombok.extern.slf4j.Slf4j;
 import net.devh.boot.grpc.server.service.GrpcService;
-import ru.yandex.practicum.grpc.telemetry.collector.CollectorControllerGrpc;
+import org.springframework.lang.NonNull;
+import ru.yandex.practicum.grpc.telemetry.collector
+		.CollectorControllerGrpc.CollectorControllerImplBase;
 import ru.yandex.practicum.grpc.telemetry.event.HubEventProto;
 import ru.yandex.practicum.grpc.telemetry.event.SensorEventProto;
 import ru.yandex.practicum.telemetry.collector.handler.HubEventHandler;
@@ -16,15 +19,16 @@ import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+@Slf4j
 @GrpcService
-public class EventController extends CollectorControllerGrpc.CollectorControllerImplBase {
+public class EventController extends CollectorControllerImplBase {
 
 	private final Map<SensorEventProto.PayloadCase, SensorEventHandler> sensorEventHandlers;
 	private final Map<HubEventProto.PayloadCase, HubEventHandler> hubEventHandlers;
 
 	public EventController(
-			Set<SensorEventHandler> sensorEventHandlers,
-			Set<HubEventHandler> hubEventHandlers
+			@NonNull Set<SensorEventHandler> sensorEventHandlers,
+			@NonNull Set<HubEventHandler> hubEventHandlers
 	) {
 		// Преобразовываем набор хендлеров в map, где ключ — тип события от конкретного датчика или хаба.
 		// Это нужно для упрощения поиска подходящего хендлера во время обработки событий
@@ -49,7 +53,10 @@ public class EventController extends CollectorControllerGrpc.CollectorController
 	 * @param responseObserver Ответ для клиента
 	 */
 	@Override
-	public void collectSensorEvent(SensorEventProto request, StreamObserver<Empty> responseObserver) {
+	public void collectSensorEvent(@NonNull SensorEventProto request, StreamObserver<Empty> responseObserver) {
+
+		log.info("Получен gRPC запрос:\n collectSensorEvent({})", request.getPayloadCase().name());
+
 		try {
 			// проверяем, есть ли обработчик для полученного события
 			if (sensorEventHandlers.containsKey(request.getPayloadCase())) {
@@ -71,7 +78,10 @@ public class EventController extends CollectorControllerGrpc.CollectorController
 	}
 
 	@Override
-	public void collectHubEvent(HubEventProto request, StreamObserver<Empty> responseObserver) {
+	public void collectHubEvent(@NonNull HubEventProto request, StreamObserver<Empty> responseObserver) {
+
+		log.info("\nПолучен gRPC запрос:\n collectHubEvent({})", request.getPayloadCase().name());
+
 		try {
 			if (hubEventHandlers.containsKey(request.getPayloadCase())) {
 				hubEventHandlers.get(request.getPayloadCase()).handle(request);

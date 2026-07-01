@@ -14,11 +14,15 @@ import java.time.Instant;
 @SuperBuilder
 public abstract class Event {
 
-	/** Идентификатор хаба, связанного с событием. */
+	/**
+	 * Идентификатор хаба, связанного с событием.
+	 */
 	@NotBlank
 	private String hubId;
 
-	/** Временная метка события. */
+	/**
+	 * Временная метка события.
+	 */
 	@NotNull
 	@Builder.Default
 	private Instant timestamp = Instant.now();

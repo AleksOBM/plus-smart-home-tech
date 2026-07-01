@@ -1,59 +1,22 @@
 @namespace("ru.yandex.practicum.kafka.telemetry.event")
 protocol HubEventProtocol {
 
-	/**
-	  * Перечисление типов устройств,
-	  * которые могут быть добавлены в систему.
-	*/
-	enum DeviceTypeAvro {
-		MOTION_SENSOR,
-		TEMPERATURE_SENSOR,
-		LIGHT_SENSOR,
-		CLIMATE_SENSOR,
-		SWITCH_SENSOR
-	}
+	/** Любое событие хаба. */
+	record HubEventAvro {
 
-	/**
-	  * Типы условий, которые могут
-	  * использоваться в сценариях.
-	*/
-	enum ConditionTypeAvro {
-		MOTION,
-		LUMINOSITY,
-		SWITCH,
-		TEMPERATURE,
-		CO2LEVEL,
-		HUMIDITY
-	}
+		/** Идентификатор хаба, связанного с событием. */
+		string hubId;
 
-	/**
-	  * Операции, которые могут быть
-	  * использованы в условиях.
-	*/
-	enum ConditionOperationAvro {
-		EQUALS,
-		GREATER_THAN,
-		LOWER_THAN
-	}
+		/** Временная метка события. */
+		timestamp_ms timestamp;
 
-	/**
-	  * Перечисление возможных типов
-	  * действий при срабатывании условия
-	  * активации сценария.
-	*/
-	enum ActionTypeAvro {
-		ACTIVATE,
-		DEACTIVATE,
-		INVERSE,
-		SET_VALUE
-	}
-
-	/** Перечисление типов событий хаба. */
-	enum HubEventTypeAvro {
-		DEVICE_ADDED,
-		DEVICE_REMOVED,
-		SCENARIO_ADDED,
-		SCENARIO_REMOVED
+		/** Событие хаба. */
+		union{
+			DeviceAddedEventAvro,
+			DeviceRemovedEventAvro,
+			ScenarioAddedEventAvro,
+			ScenarioRemovedEventAvro
+		} payload;
 	}
 
 	/**
@@ -116,6 +79,9 @@ protocol HubEventProtocol {
 
 		/** Тип устройства. */
 		DeviceTypeAvro deviceType;
+
+		/** Тип события. */
+		HubEventTypeAvro type = "DEVICE_ADDED";
 	}
 
 	/**
@@ -129,6 +95,9 @@ protocol HubEventProtocol {
 
 		/** Тип устройства. */
 		DeviceTypeAvro deviceType;
+
+		/** Тип события. */
+		HubEventTypeAvro type = "DEVICE_REMOVED";
 	}
 
 	/**
@@ -156,6 +125,9 @@ protocol HubEventProtocol {
 		  * Не может быть пустым.
 		*/
 		array<DeviceActionAvro> actions;
+
+		/** Тип события. */
+		HubEventTypeAvro type = "SCENARIO_ADDED";
 	}
 
 	/**
@@ -170,24 +142,64 @@ protocol HubEventProtocol {
 		  * Должно содержать не менее 3 символов.
 		*/
 		string name;
+
+		/** Тип события. */
+		HubEventTypeAvro type = "SCENARIO_REMOVED";
 	}
 
-	/** Любое событие хаба. */
-	record HubEventAvro {
+	/**
+	  * Перечисление типов устройств,
+	  * которые могут быть добавлены в систему.
+	*/
+	enum DeviceTypeAvro {
+		MOTION_SENSOR,
+		TEMPERATURE_SENSOR,
+		LIGHT_SENSOR,
+		CLIMATE_SENSOR,
+		SWITCH_SENSOR
+	}
 
-		/** Идентификатор хаба, связанного с событием. */
-		string hubId;
+	/**
+	  * Типы условий, которые могут
+	  * использоваться в сценариях.
+	*/
+	enum ConditionTypeAvro {
+		MOTION,
+		LUMINOSITY,
+		SWITCH,
+		TEMPERATURE,
+		CO2LEVEL,
+		HUMIDITY
+	}
 
-		/** Временная метка события. */
-		timestamp_ms timestamp;
+	/**
+	  * Операции, которые могут быть
+	  * использованы в условиях.
+	*/
+	enum ConditionOperationAvro {
+		EQUALS,
+		GREATER_THAN,
+		LOWER_THAN
+	}
 
-		/** Событие хаба. */
-		union{
-			DeviceAddedEventAvro,
-			DeviceRemovedEventAvro,
-			ScenarioAddedEventAvro,
-			ScenarioRemovedEventAvro
-		} payload;
+	/**
+	  * Перечисление возможных типов
+	  * действий при срабатывании условия
+	  * активации сценария.
+	*/
+	enum ActionTypeAvro {
+		ACTIVATE,
+		DEACTIVATE,
+		INVERSE,
+		SET_VALUE
+	}
+
+	/** Перечисление типов событий хаба. */
+	enum HubEventTypeAvro {
+		DEVICE_ADDED,
+		DEVICE_REMOVED,
+		SCENARIO_ADDED,
+		SCENARIO_REMOVED
 	}
 
 }

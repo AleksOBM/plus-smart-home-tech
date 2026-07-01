@@ -17,21 +17,7 @@
     <modules>
         <module>avro-schemas</module>
         <module>proto-schemas</module>
+        <module>timestamp-utils</module>
     </modules>
-
-    <dependencies>
-        <dependency>
-            <groupId>io.grpc</groupId>
-            <artifactId>grpc-protobuf</artifactId>
-            <version>${grpc.version}</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>io.grpc</groupId>
-            <artifactId>grpc-stub</artifactId>
-            <version>${grpc.version}</version>
-            <scope>compile</scope>
-        </dependency>
-    </dependencies>
 
 </project>

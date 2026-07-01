@@ -1,18 +1,17 @@
 package ru.yandex.practicum.telemetry.collector.mapper;
 
-import jakarta.annotation.Nonnull;
 import lombok.experimental.UtilityClass;
-import org.jspecify.annotations.NonNull;
+import org.springframework.lang.NonNull;
 import ru.yandex.practicum.grpc.telemetry.event.*;
 import ru.yandex.practicum.kafka.telemetry.event.*;
 import ru.yandex.practicum.telemetry.collector.model.sensor.SensorEvent;
 import ru.yandex.practicum.telemetry.collector.model.sensor.events.*;
-import ru.yandex.practicum.telemetry.collector.util.CollectorUtils;
+import ru.yandex.practicum.telemetry.utils.TimestampUtils;
 
 @UtilityClass
 public class SensorMapper {
 
-	public SensorEventAvro toAvro(@Nonnull SensorEvent sensorEvent) {
+	public SensorEventAvro toAvro(@NonNull SensorEvent sensorEvent) {
 		SensorEventAvro.Builder sensorEventAvro = SensorEventAvro.newBuilder()
 				.setId(sensorEvent.getId())
 				.setHubId(sensorEvent.getHubId())
@@ -30,14 +29,14 @@ public class SensorMapper {
 		return sensorEventAvro.build();
 	}
 
-	private LightSensorAvro toLightSensorAvro(@Nonnull LightSensorEvent sensorEvent) {
+	private LightSensorAvro toLightSensorAvro(@NonNull LightSensorEvent sensorEvent) {
 		return LightSensorAvro.newBuilder()
 				.setLinkQuality(sensorEvent.getLinkQuality())
 				.setLuminosity(sensorEvent.getLuminosity())
 				.build();
 	}
 
-	private MotionSensorAvro toMotionSensorAvro(@Nonnull MotionSensorEvent sensorEvent) {
+	private MotionSensorAvro toMotionSensorAvro(@NonNull MotionSensorEvent sensorEvent) {
 		return MotionSensorAvro.newBuilder()
 				.setLinkQuality(sensorEvent.getLinkQuality())
 				.setMotion(sensorEvent.getMotion())
@@ -45,14 +44,14 @@ public class SensorMapper {
 				.build();
 	}
 
-	private TemperatureSensorAvro toTemperatureSensorAvro(@Nonnull TemperatureSensorEvent sensorEvent) {
+	private TemperatureSensorAvro toTemperatureSensorAvro(@NonNull TemperatureSensorEvent sensorEvent) {
 		return TemperatureSensorAvro.newBuilder()
 				.setTemperatureC(sensorEvent.getTemperatureC())
 				.setTemperatureF(sensorEvent.getTemperatureF())
 				.build();
 	}
 
-	private ClimateSensorAvro toClimateSensorAvro(@Nonnull ClimateSensorEvent sensorEvent) {
+	private ClimateSensorAvro toClimateSensorAvro(@NonNull ClimateSensorEvent sensorEvent) {
 		return ClimateSensorAvro.newBuilder()
 				.setTemperatureC(sensorEvent.getTemperatureC())
 				.setCo2Level(sensorEvent.getCo2Level())
@@ -60,7 +59,7 @@ public class SensorMapper {
 				.build();
 	}
 
-	private SwitchSensorAvro toSwitchSensorAvro(@Nonnull SwitchSensorEvent sensorEvent) {
+	private SwitchSensorAvro toSwitchSensorAvro(@NonNull SwitchSensorEvent sensorEvent) {
 		return SwitchSensorAvro.newBuilder()
 				.setState(sensorEvent.getState())
 				.build();
@@ -81,7 +80,7 @@ public class SensorMapper {
 		ClimateSensorProto climateSensor = eventProto.getClimateSensor();
 		return ClimateSensorEvent.builder()
 				.hubId(eventProto.getHubId())
-				.timestamp(CollectorUtils.toInstant(eventProto.getTimestamp()))
+				.timestamp(TimestampUtils.toInstant(eventProto.getTimestamp()))
 				.id(eventProto.getId())
 				.temperatureC(climateSensor.getTemperatureC())
 				.humidity(climateSensor.getHumidity())
@@ -93,7 +92,7 @@ public class SensorMapper {
 		LightSensorProto lightSensor = eventProto.getLightSensor();
 		return LightSensorEvent.builder()
 				.hubId(eventProto.getHubId())
-				.timestamp(CollectorUtils.toInstant(eventProto.getTimestamp()))
+				.timestamp(TimestampUtils.toInstant(eventProto.getTimestamp()))
 				.id(eventProto.getId())
 				.linkQuality(lightSensor.getLinkQuality())
 				.luminosity(lightSensor.getLuminosity())
@@ -104,7 +103,7 @@ public class SensorMapper {
 		MotionSensorProto motionSensor = eventProto.getMotionSensor();
 		return MotionSensorEvent.builder()
 				.hubId(eventProto.getHubId())
-				.timestamp(CollectorUtils.toInstant(eventProto.getTimestamp()))
+				.timestamp(TimestampUtils.toInstant(eventProto.getTimestamp()))
 				.id(eventProto.getId())
 				.linkQuality(motionSensor.getLinkQuality())
 				.motion(motionSensor.getMotion())
@@ -116,7 +115,7 @@ public class SensorMapper {
 		SwitchSensorProto switchSensor = eventProto.getSwitchSensor();
 		return SwitchSensorEvent.builder()
 				.hubId(eventProto.getHubId())
-				.timestamp(CollectorUtils.toInstant(eventProto.getTimestamp()))
+				.timestamp(TimestampUtils.toInstant(eventProto.getTimestamp()))
 				.id(eventProto.getId())
 				.state(switchSensor.getState())
 				.build();
@@ -126,7 +125,7 @@ public class SensorMapper {
 		TemperatureSensorProto temperatureSensor = eventProto.getTemperatureSensor();
 		return TemperatureSensorEvent.builder()
 				.hubId(eventProto.getHubId())
-				.timestamp(CollectorUtils.toInstant(eventProto.getTimestamp()))
+				.timestamp(TimestampUtils.toInstant(eventProto.getTimestamp()))
 				.id(eventProto.getId())
 				.temperatureC(temperatureSensor.getTemperatureC())
 				.temperatureF(temperatureSensor.getTemperatureF())
