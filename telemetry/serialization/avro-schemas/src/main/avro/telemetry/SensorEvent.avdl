@@ -1,88 +1,6 @@
 @namespace("ru.yandex.practicum.kafka.telemetry.event")
 protocol SensorEventProtocol {
 
-	/**
-	  * Перечисление типов событий датчиков.
-	  * Определяет различные типы событий,
-	  * которые могут быть связаны с датчиками.
-	*/
-	enum SensorEventTypeAvro {
-		LIGHT_SENSOR_EVENT,
-		MOTION_SENSOR_EVENT,
-		TEMPERATURE_SENSOR_EVENT,
-		CLIMATE_SENSOR_EVENT,
-		SWITCH_SENSOR_EVENT
-	}
-
-	/**
-	  * Событие датчика освещенности,
-	  * содержащее информацию о качестве
-	  * связи и уровне освещенности.
-	*/
-	record LightSensorEventAvro {
-
-		/** Качество связи. */
-		int linkQuality;
-
-		/** Уровень освещенности. */
-		int luminosity;
-	}
-
-	/** Событие датчика движения. */
-	record MotionSensorEventAvro {
-
-		/** Качество связи. */
-		int linkQuality;
-
-		/** Наличие/отсутствие движения. */
-		boolean motion;
-
-		/** Напряжение. */
-		int voltage;
-	}
-
-	/**
-	  * Событие датчика температуры,
-	  * содержащее информацию о температуре
-	  * в градусах Цельсия и Фаренгейта.
-	*/
-	record TemperatureSensorEventAvro {
-
-		/** Уровень температуры по шкале Цельсия. */
-		int temperatureC;
-
-		/** Температура в градусах Фаренгейта. */
-		int temperatureF;
-	}
-
-	/**
-	  * Событие климатического датчика,
-	  * содержащее информацию о температуре,
-	  * влажности и уровне CO2.
-	*/
-	record ClimateSensorEventAvro {
-
-		/** Уровень температуры по шкале Цельсия. */
-		int temperatureC;
-
-		/** Влажность. */
-		int humidity;
-
-		/** Уровень CO2. */
-		int co2Level;
-	}
-
-	/**
-	  * Событие датчика переключателя,
-	  * содержащее информацию о текущем
-	  * состоянии переключателя.
-	*/
-	record SwitchSensorEventAvro {
-
-		/** Текущее состояние переключателя. */
-		boolean state;
-	}
-
 	/** Любое событие сенсора. */
 	record SensorEventAvro {
 
@@ -97,12 +15,94 @@ protocol SensorEventProtocol {
 
 		/** Событие датчика. */
 		union {
-			ClimateSensorEventAvro,
-			LightSensorEventAvro,
-			MotionSensorEventAvro,
-			SwitchSensorEventAvro,
-			TemperatureSensorEventAvro
+			ClimateSensorAvro,
+			LightSensorAvro,
+			MotionSensorAvro,
+			SwitchSensorAvro,
+			TemperatureSensorAvro
 		} payload;
+	}
+
+	/**
+	  * Событие климатического датчика,
+	  * содержащее информацию о температуре,
+	  * влажности и уровне CO2.
+	*/
+	record ClimateSensorAvro {
+
+		/** Уровень температуры по шкале Цельсия. */
+		int temperatureC;
+
+		/** Влажность. */
+		int humidity;
+
+		/** Уровень CO2. */
+		int co2Level;
+	}
+
+	/**
+	  * Событие датчика освещенности,
+	  * содержащее информацию о качестве
+	  * связи и уровне освещенности.
+	*/
+	record LightSensorAvro {
+
+		/** Качество связи. */
+		int linkQuality;
+
+		/** Уровень освещенности. */
+		int luminosity;
+	}
+
+	/** Событие датчика движения. */
+	record MotionSensorAvro {
+
+		/** Качество связи. */
+		int linkQuality;
+
+		/** Наличие/отсутствие движения. */
+		boolean motion;
+
+		/** Напряжение. */
+		int voltage;
+	}
+
+	/**
+	  * Событие датчика переключателя,
+	  * содержащее информацию о текущем
+	  * состоянии переключателя.
+	*/
+	record SwitchSensorAvro {
+
+		/** Текущее состояние переключателя. */
+		boolean state;
+	}
+
+	/**
+	  * Событие датчика температуры,
+	  * содержащее информацию о температуре
+	  * в градусах Цельсия и Фаренгейта.
+	*/
+	record TemperatureSensorAvro {
+
+		/** Уровень температуры по шкале Цельсия. */
+		int temperatureC;
+
+		/** Температура в градусах Фаренгейта. */
+		int temperatureF;
+	}
+
+	/**
+	  * Перечисление типов событий датчиков.
+	  * Определяет различные типы событий,
+	  * которые могут быть связаны с датчиками.
+	*/
+	enum SensorEventTypeAvro {
+		CLIMATE_SENSOR_EVENT,
+		LIGHT_SENSOR_EVENT,
+		MOTION_SENSOR_EVENT,
+		SWITCH_SENSOR_EVENT,
+		TEMPERATURE_SENSOR_EVENT
 	}
 
 }

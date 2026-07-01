@@ -1,0 +1,55 @@
+server.port: 8083
+
+kafka:
+  hub-event-consumer-config:
+    "bootstrap.servers": "localhost:9092"
+    "topics": "telemetry.hubs.v1"
+    "group.id": "analyzer.hub-event.group"
+    "key.deserializer": "org.apache.kafka.common.serialization.StringDeserializer"
+    "value.deserializer": "ru.yandex.practicum.kafka.deserializer.events.HubEventDeserializer"
+    "auto.offset.reset": "earliest"
+    "enable.auto.commit": "false"
+    "max.poll.records": "10"
+#    "fetch.min.bytes": "512"
+    "fetch.max.wait.ms": "1000"
+  snapshot-consumer-config:
+    "bootstrap.servers": "localhost:9092"
+    "topics": "telemetry.snapshots.v1"
+    "group.id": "analyzer.snapshot.group"
+    "key.deserializer": "org.apache.kafka.common.serialization.StringDeserializer"
+    "value.deserializer": "ru.yandex.practicum.kafka.deserializer.events.SensorsSnapshotDeserializer"
+    "auto.offset.reset": "earliest"
+    "enable.auto.commit": "false"
+    "max.poll.records": "10"
+#    "fetch.min.bytes": "512"
+    "fetch.max.wait.ms": "1000"
+
+grpc:
+  client.hub-router:
+    address: 'static://localhost:59090'
+    enableKeepAlive: true
+    keepAliveWithoutCalls: true
+    negotiationType: plaintext
+
+spring:
+  application.name: Analyzer
+  main.banner-mode: OFF
+  sql.init:
+    mode: ALWAYS
+    schema-locations: classpath:schema.sql
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/sht-analyzer
+    username: dbuser
+    password: 12345
+  jpa:
+    generate-ddl: false
+    hibernate.ddl-auto: validate
+    show-sql: true
+    properties.hibernate.format_sql: true
+  jackson:
+    serialization.INDENT_OUTPUT: true
+
+logging.level:
+  root: info
+#  ru.yandex.practicum.telemetry.analyzer.service.AnalyzerServiceImpl: debug

@@ -2,6 +2,7 @@ package ru.yandex.practicum.telemetry.collector.model.hub.events;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.experimental.SuperBuilder;
 import ru.yandex.practicum.telemetry.collector.model.hub.HubEvent;
 import ru.yandex.practicum.telemetry.collector.model.hub.data.DeviceAction;
 import ru.yandex.practicum.telemetry.collector.model.hub.data.HubEventType;
@@ -11,6 +12,7 @@ import java.util.List;
 
 @Getter
 @Setter
+@SuperBuilder
 public class ScenarioAddedEvent extends HubEvent {
 
 	/**

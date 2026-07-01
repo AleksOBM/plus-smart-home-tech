@@ -1,47 +1,51 @@
 package ru.yandex.practicum.telemetry.collector.mapper;
 
-import jakarta.annotation.Nonnull;
 import lombok.experimental.UtilityClass;
+import org.springframework.lang.NonNull;
+import ru.yandex.practicum.grpc.telemetry.event.*;
 import ru.yandex.practicum.kafka.telemetry.event.*;
 import ru.yandex.practicum.telemetry.collector.model.hub.HubEvent;
+import ru.yandex.practicum.telemetry.collector.model.hub.data.*;
 import ru.yandex.practicum.telemetry.collector.model.hub.events.DeviceAddedEvent;
 import ru.yandex.practicum.telemetry.collector.model.hub.events.DeviceRemovedEvent;
 import ru.yandex.practicum.telemetry.collector.model.hub.events.ScenarioAddedEvent;
 import ru.yandex.practicum.telemetry.collector.model.hub.events.ScenarioRemovedEvent;
+import ru.yandex.practicum.telemetry.utils.TimestampUtils;
 
 @UtilityClass
 public class HubMapper {
-	public HubEventAvro toAvro(@Nonnull HubEvent hubEvent) {
+
+	public HubEventAvro toAvro(@NonNull HubEvent hubEvent) {
 		HubEventAvro.Builder hubEventAvro = HubEventAvro.newBuilder()
 				.setHubId(hubEvent.getHubId())
 				.setTimestamp(hubEvent.getTimestamp());
 
 		switch (hubEvent) {
-			case DeviceAddedEvent event -> hubEventAvro.setPayload(toDeviceAddedEvent(event));
-			case DeviceRemovedEvent event -> hubEventAvro.setPayload(toDeviceRemovedEvent(event));
-			case ScenarioAddedEvent event -> hubEventAvro.setPayload(toScenarioAddedEvent(event));
-			case ScenarioRemovedEvent event -> hubEventAvro.setPayload(toScenarioRemovedEvent(event));
+			case DeviceAddedEvent event -> hubEventAvro.setPayload(toDeviceAddedEventAvro(event));
+			case DeviceRemovedEvent event -> hubEventAvro.setPayload(toDeviceRemovedEventAvro(event));
+			case ScenarioAddedEvent event -> hubEventAvro.setPayload(toScenarioAddedEventAvro(event));
+			case ScenarioRemovedEvent event -> hubEventAvro.setPayload(toScenarioRemovedEventAvro(event));
 			default -> throw new IllegalStateException("Unknown hub event: " + hubEvent);
 		}
 
 		return hubEventAvro.build();
 	}
 
-	private static DeviceAddedEventAvro toDeviceAddedEvent(@Nonnull DeviceAddedEvent event) {
+	private DeviceAddedEventAvro toDeviceAddedEventAvro(@NonNull DeviceAddedEvent event) {
 		return DeviceAddedEventAvro.newBuilder()
 				.setId(event.getId())
 				.setDeviceType(DeviceTypeAvro.valueOf(event.getDeviceType().name()))
 				.build();
 	}
 
-	private static DeviceRemovedEventAvro toDeviceRemovedEvent(@Nonnull DeviceRemovedEvent event) {
+	private DeviceRemovedEventAvro toDeviceRemovedEventAvro(@NonNull DeviceRemovedEvent event) {
 		return DeviceRemovedEventAvro.newBuilder()
 				.setId(event.getId())
 				.setDeviceType(DeviceTypeAvro.valueOf(event.getDeviceType().name()))
 				.build();
 	}
 
-	private static ScenarioAddedEventAvro toScenarioAddedEvent(@Nonnull ScenarioAddedEvent event) {
+	private ScenarioAddedEventAvro toScenarioAddedEventAvro(@NonNull ScenarioAddedEvent event) {
 		return ScenarioAddedEventAvro.newBuilder()
 				.setName(event.getName())
 				.setConditions(event.getConditions().stream().map(condition ->
@@ -64,9 +68,77 @@ public class HubMapper {
 				.build();
 	}
 
-	private static ScenarioRemovedEventAvro toScenarioRemovedEvent(@Nonnull ScenarioRemovedEvent event) {
+	private ScenarioRemovedEventAvro toScenarioRemovedEventAvro(@NonNull ScenarioRemovedEvent event) {
 		return ScenarioRemovedEventAvro.newBuilder()
 				.setName(event.getName())
+				.build();
+	}
+
+	public HubEvent toEntity(@NonNull HubEventProto eventProto) {
+		return switch (eventProto.getPayloadCase()) {
+			case DEVICE_ADDED -> toDeviceAddedEvent(eventProto);
+			case DEVICE_REMOVED -> toDeviceRemovedEvent(eventProto);
+			case SCENARIO_ADDED -> toScenarioAddedEvent(eventProto);
+			case SCENARIO_REMOVED -> toScenarioRemovedEvent(eventProto);
+			default -> throw new IllegalStateException("Unknown hub event: " + eventProto);
+		};
+	}
+
+	private DeviceAddedEvent toDeviceAddedEvent(@NonNull HubEventProto eventProto) {
+		DeviceAddedEventProto proto = eventProto.getDeviceAdded();
+		return DeviceAddedEvent.builder()
+				.hubId(eventProto.getHubId())
+				.timestamp(TimestampUtils.toInstant(eventProto.getTimestamp()))
+				.id(proto.getId())
+				.deviceType(DeviceType.valueOf(proto.getDeviceType().name()))
+				.build();
+	}
+
+	private DeviceRemovedEvent toDeviceRemovedEvent(@NonNull HubEventProto eventProto) {
+		DeviceRemovedEventProto proto = eventProto.getDeviceRemoved();
+		return DeviceRemovedEvent.builder()
+				.hubId(eventProto.getHubId())
+				.timestamp(TimestampUtils.toInstant(eventProto.getTimestamp()))
+				.id(proto.getId())
+				.deviceType(DeviceType.valueOf(proto.getDeviceType().name()))
+				.build();
+	}
+
+	private ScenarioAddedEvent toScenarioAddedEvent(@NonNull HubEventProto eventProto) {
+		ScenarioAddedEventProto proto = eventProto.getScenarioAdded();
+		return ScenarioAddedEvent.builder()
+				.hubId(eventProto.getHubId())
+				.timestamp(TimestampUtils.toInstant(eventProto.getTimestamp()))
+				.name(proto.getName())
+				.conditions(proto.getConditionsList().stream().map(conditionProto ->
+								ScenarioCondition.builder()
+										.sensorId(conditionProto.getSensorId())
+										.type(ConditionType.valueOf(conditionProto.getType().name()))
+										.operation(ConditionOperation.valueOf(conditionProto.getOperation().name()))
+										.value(conditionProto.hasIntValue() ? conditionProto.getIntValue() :
+												(conditionProto.getBoolValue() ? 1 : 0)
+										)
+										.build()
+						).toList()
+				)
+				.actions(proto.getActionsList().stream().map(deviceActionProto ->
+								DeviceAction.builder()
+										.sensorId(deviceActionProto.getSensorId())
+										.type(ActionType.valueOf(deviceActionProto.getType().name()))
+										.value(deviceActionProto.getValue())
+										.build()
+
+						).toList()
+				)
+				.build();
+	}
+
+	private ScenarioRemovedEvent toScenarioRemovedEvent(@NonNull HubEventProto eventProto) {
+		ScenarioRemovedEventProto proto = eventProto.getScenarioRemoved();
+		return ScenarioRemovedEvent.builder()
+				.hubId(eventProto.getHubId())
+				.timestamp(TimestampUtils.toInstant(eventProto.getTimestamp()))
+				.name(proto.getName())
 				.build();
 	}
 }

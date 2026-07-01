@@ -5,12 +5,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.producer.RecordMetadata;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import ru.yandex.practicum.telemetry.collector.model.hub.HubEvent;
+import ru.yandex.practicum.telemetry.collector.model.sensor.SensorEvent;
 import ru.yandex.practicum.kafka.telemetry.event.HubEventAvro;
 import ru.yandex.practicum.kafka.telemetry.event.SensorEventAvro;
 import ru.yandex.practicum.telemetry.collector.mapper.HubMapper;
 import ru.yandex.practicum.telemetry.collector.mapper.SensorMapper;
-import ru.yandex.practicum.telemetry.collector.model.hub.HubEvent;
-import ru.yandex.practicum.telemetry.collector.model.sensor.SensorEvent;
 import ru.yandex.practicum.telemetry.collector.producer.SmartAvroProducer;
 
 import java.util.concurrent.CompletableFuture;
@@ -37,8 +37,12 @@ public class EventServiceImpl implements EventService {
 				log.error("Ошибка отправки события сенсора {}:\n {}",
 						sensorEvent.getType(), throwable.getMessage(), throwable);
 			} else {
-				log.info("Событие сенсора отправлено:\n topic={}, key={}, partition={}, offset={}",
-						sensorsTopic, sensorEvent.getHubId(), record.partition(), record.offset());
+				log.info("{} отправлен по адресу:\n topic={}, key={}, partition={}, offset={}",
+						sensorEvent.getType(),
+						sensorsTopic, sensorEvent.getHubId(),
+						record.partition(),
+						record.offset()
+				);
 			}
 		});
 	}
@@ -52,8 +56,13 @@ public class EventServiceImpl implements EventService {
 				log.error("Ошибка отправки события хаба {}:\n {}",
 						hubEvent.getType(), throwable.getMessage(), throwable);
 			} else {
-				log.info("Событие хаба отправлено:\n topic={}, key={}, partition={}, offset={}",
-						hubsTopic, hubEvent.getHubId(), record.partition(), record.offset());
+				log.info("{} отправлен по адресу:\n topic={}, key={}, partition={}, offset={}",
+						hubEvent.getType(),
+						hubsTopic,
+						hubEvent.getHubId(),
+						record.partition(),
+						record.offset()
+				);
 			}
 		});
 	}
