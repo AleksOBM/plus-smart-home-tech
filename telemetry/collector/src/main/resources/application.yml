@@ -1,10 +1,12 @@
-server.port: 8080
-grpc.server.port: 59091
-
 spring:
-  application.name: Collector
+  application:
+    name: collector
+  config:
+    import: configserver:http://localhost:8888
 
-sht.servers.bootstrap: localhost:9092
-sht.telemetry.topics:
-  sensors: telemetry.sensors.v1
-  hubs: telemetry.hubs.v1
+cloud:
+  config:
+    fail-fast: true
+    retry:
+      use-random-policy: true
+      max-interval: 10000
