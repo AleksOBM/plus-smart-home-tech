@@ -1,10 +1,16 @@
-server.port: 8082
-
 spring:
-  application.name: Aggregator
+  application:
+    name: aggregator
+  config:
+    import: configserver:http://localhost:8888
 
-sht:
-  servers.bootstrap: localhost:9092
-  aggregator.topics:
-    sensors: telemetry.sensors.v1
-    snapshots: telemetry.snapshots.v1
+cloud:
+  config:
+    fail-fast: true
+    retry:
+      use-random-policy: true
+      max-interval: 6000
+
+#cloud:
+#  config:
+#    fail-fast: true
