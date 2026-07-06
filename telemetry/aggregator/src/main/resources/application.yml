@@ -14,3 +14,8 @@ cloud:
 #cloud:
 #  config:
 #    fail-fast: true
+
+eureka:
+  client:
+    service-url:
+      default-zone: http://localhost:8761/eureka/

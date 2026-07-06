@@ -76,6 +76,11 @@
             <artifactId>spring-retry</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
+        </dependency>
+
         <!-- Until gRPC generator library moves to generated jakarta instead of javax -->
         <!-- https://github.com/grpc/grpc-java/issues/9179 -->
         <dependency>
