@@ -1,7 +1,7 @@
-grpc:
-  server:
-    port: 59090
-
 spring:
   application:
     name: hub-router
+
+grpc:
+  server:
+    port: 59090
