@@ -49,4 +49,3 @@ spring:
 
 logging.level:
   root: info
-#  ru.yandex.practicum.telemetry.analyzer.service.AnalyzerServiceImpl: debug

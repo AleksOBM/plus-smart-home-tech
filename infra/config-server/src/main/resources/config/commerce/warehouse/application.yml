@@ -1,0 +1,27 @@
+spring:
+  main:
+    banner-mode: OFF
+  sql:
+    init:
+      mode: ALWAYS
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/sht-commerce?currentSchema=warehouse
+    username: dbuser
+    password: 12345
+  jpa:
+    generate-ddl: false
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        default-schema: warehouse
+        show-sql: true
+        format-sql: true
+  jackson:
+    serialization:
+      INDENT_OUTPUT: true
+
+logging:
+  level:
+    root: info
