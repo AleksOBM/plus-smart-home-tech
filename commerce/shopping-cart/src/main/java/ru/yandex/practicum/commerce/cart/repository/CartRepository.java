@@ -1,0 +1,9 @@
+package ru.yandex.practicum.commerce.cart.repository;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import ru.yandex.practicum.commerce.cart.model.ShoppingCart;
+
+import java.util.UUID;
+
+public interface CartRepository extends JpaRepository<ShoppingCart, UUID> {
+}

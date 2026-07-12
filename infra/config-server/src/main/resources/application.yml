@@ -23,3 +23,9 @@ eureka:
     instance-id: ${spring.application.name}:${random.value}
     lease-renewal-interval-in-seconds: 10
     lease-expiration-duration-in-seconds: 30
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"

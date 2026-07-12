@@ -1,4 +1,4 @@
-package ru.yandex.practicum.commerce.interaction.dto;
+package ru.yandex.practicum.commerce.interaction.requests;
 
 import jakarta.validation.constraints.NotNull;
 import ru.yandex.practicum.commerce.interaction.enums.QuantityState;

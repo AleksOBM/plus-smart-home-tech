@@ -1,5 +1,5 @@
 CREATE TABLE IF NOT EXISTS products (
-    product_id UUID PRIMARY KEY,
+    product_id UUID NOT NULL PRIMARY KEY,
     product_name VARCHAR(100) NOT NULL,
     description VARCHAR(500) NOT NULL,
     image_src TEXT,
@@ -9,12 +9,24 @@ CREATE TABLE IF NOT EXISTS products (
     price REAL NOT NULL,
 
     CONSTRAINT products_quantity_state_check
-            CHECK (quantity_state IN ('ENDED', 'FEW', 'ENOUGH', 'MANY')),
+        CHECK (quantity_state IN ('ENDED', 'FEW', 'ENOUGH', 'MANY')),
 
     CONSTRAINT products_product_state_check
-            CHECK (product_state IN ('ACTIVE', 'DEACTIVATE')),
+        CHECK (product_state IN ('ACTIVE', 'DEACTIVATE')),
 
     CONSTRAINT products_product_category_check
         CHECK (product_category IN ('LIGHTING', 'CONTROL', 'SENSORS'))
 );
 
+CREATE TABLE IF NOT EXISTS shopping_carts (
+    id UUID NOT NULL PRIMARY KEY,
+    user_id VARCHAR(50) NOT NULL,
+    is_open BOOLEAN NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS products_in_cart (
+    shopping_cart_id UUID REFERENCES shopping_carts(id),
+    product_id UUID REFERENCES products(product_id),
+    product_count INT,
+    PRIMARY KEY (shopping_cart_id, product_id)
+);

@@ -6,7 +6,7 @@ import org.springframework.http.HttpStatus;
 
 @Getter
 @AllArgsConstructor
-public class ProductNotFoundException extends RuntimeException {
+public class SpecifiedProductAlreadyInWarehouseException extends RuntimeException {
 
 	private final HttpStatus httpStatus;
 	private final String userMessage;

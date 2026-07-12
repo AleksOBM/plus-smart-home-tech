@@ -6,7 +6,7 @@ spring:
       mode: ALWAYS
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5432/sht-commerce?currentSchema=cart
+    url: jdbc:postgresql://localhost:5432/sht-cart
     username: dbuser
     password: 12345
   jpa:
@@ -15,7 +15,7 @@ spring:
       ddl-auto: validate
     properties:
       hibernate:
-        default-schema: cart
+        default-schema: public
         show-sql: true
         format-sql: true
   jackson:
@@ -25,3 +25,9 @@ spring:
 logging:
   level:
     root: info
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, metrics, prometheus, info, mappings
