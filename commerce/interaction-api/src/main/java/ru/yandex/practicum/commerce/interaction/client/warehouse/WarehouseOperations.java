@@ -19,15 +19,15 @@ public interface WarehouseOperations {
 	void addProduct(@RequestBody NewProductInWarehouseRequest request)
 			throws SpecifiedProductAlreadyInWarehouseException;
 
-	@PostMapping("check")
+	@PostMapping("/check")
 	BookedProductsDto checkProduct(@RequestBody ShoppingCartDto cartDto)
 			throws ProductInShoppingCartLowQuantityInWarehouse;
 
-	@PostMapping("add")
+	@PostMapping("/add")
 	void takeProduct(@RequestBody AddProductToWarehouseRequest request)
 			throws NoSpecifiedProductInWarehouseException;
 
-	@GetMapping("address")
+	@GetMapping("/address")
 	AddressDto getAddress();
 
 }

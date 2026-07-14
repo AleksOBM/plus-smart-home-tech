@@ -21,13 +21,22 @@ spring:
   jackson:
     serialization:
       INDENT_OUTPUT: true
-
-logging:
-  level:
-    root: info
+  cloud:
+    loadbalancer:
+      enabled: false
 
 management:
   endpoints:
     web:
       exposure:
         include: health, metrics, prometheus, info, mappings
+
+resilience4j.circuitbreaker:
+  configs:
+    default:
+      slidingWindowSize: 50
+      failureRateThreshold: 50
+
+logging:
+  level:
+    root: info

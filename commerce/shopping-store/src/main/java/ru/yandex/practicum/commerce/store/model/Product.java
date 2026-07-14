@@ -3,6 +3,7 @@ package ru.yandex.practicum.commerce.store.model;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.experimental.FieldDefaults;
 import ru.yandex.practicum.commerce.interaction.enums.ProductCategory;
 import ru.yandex.practicum.commerce.interaction.enums.ProductState;
@@ -11,7 +12,8 @@ import ru.yandex.practicum.commerce.interaction.enums.QuantityState;
 import java.util.UUID;
 
 @Entity
-@Builder
+@Getter
+@Builder(toBuilder = true)
 @Table(name = "products")
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class Product {

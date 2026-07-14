@@ -13,6 +13,7 @@ import java.util.Arrays;
 @Aspect
 @Component
 public class LoggingAspect {
+
 	@Around("@annotation(ru.yandex.practicum.commerce.interaction.annotations.Loggable)")
 	public Object logExecutionTime(@NonNull ProceedingJoinPoint joinPoint) throws Throwable {
 		log.info("Entering method: {}", joinPoint.getSignature());

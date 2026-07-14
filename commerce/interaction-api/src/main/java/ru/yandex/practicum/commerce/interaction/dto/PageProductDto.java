@@ -1,19 +1,15 @@
 package ru.yandex.practicum.commerce.interaction.dto;
 
-import ru.yandex.practicum.commerce.interaction.utils.PageableObject;
-import ru.yandex.practicum.commerce.interaction.utils.SortObject;
+import lombok.Builder;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 
-public record PageProductDto(
-		Long totalElements,
-		Integer totalPages,
-		Boolean first,
-		Boolean last,
-		Integer size,
-		ProductDto content,
-		Integer number,
-		SortObject sort,
-		Integer numberOfElements,
-		PageableObject pageable,
-		Boolean empty
-) {
+import java.util.List;
+
+public class PageProductDto extends PageImpl<ProductDto> {
+
+	@Builder
+	public PageProductDto(List<ProductDto> content, Pageable pageable) {
+		super(content, pageable, content.size());
+	}
 }

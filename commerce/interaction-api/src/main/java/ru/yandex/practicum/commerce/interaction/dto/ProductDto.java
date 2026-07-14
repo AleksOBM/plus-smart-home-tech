@@ -1,6 +1,9 @@
 package ru.yandex.practicum.commerce.interaction.dto;
 
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
+import lombok.Builder;
 import ru.yandex.practicum.commerce.interaction.enums.ProductCategory;
 import ru.yandex.practicum.commerce.interaction.enums.ProductState;
 import ru.yandex.practicum.commerce.interaction.enums.QuantityState;
@@ -17,14 +20,15 @@ import java.util.UUID;
  * @param productCategory Категория товара
  * @param price           Цена товара
  */
+@Builder
 public record ProductDto(
 
 		UUID productId,
 
-		@NotNull
+		@NotBlank
 		String productName,
 
-		@NotNull
+		@NotBlank
 		String description,
 
 		String imageSrc,
@@ -38,6 +42,7 @@ public record ProductDto(
 		ProductCategory productCategory,
 
 		@NotNull
+		@Positive
 		Float price
 ) {
 }

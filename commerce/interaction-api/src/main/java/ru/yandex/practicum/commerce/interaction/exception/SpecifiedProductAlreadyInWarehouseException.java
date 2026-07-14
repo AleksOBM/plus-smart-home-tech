@@ -1,13 +1,10 @@
 package ru.yandex.practicum.commerce.interaction.exception;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
 import org.springframework.http.HttpStatus;
+import ru.yandex.practicum.commerce.interaction.error.CustomException;
 
-@Getter
-@AllArgsConstructor
-public class SpecifiedProductAlreadyInWarehouseException extends RuntimeException {
-
-	private final HttpStatus httpStatus;
-	private final String userMessage;
+public class SpecifiedProductAlreadyInWarehouseException extends CustomException {
+	public SpecifiedProductAlreadyInWarehouseException(String userMessage) {
+		super(HttpStatus.ALREADY_REPORTED, userMessage);
+	}
 }

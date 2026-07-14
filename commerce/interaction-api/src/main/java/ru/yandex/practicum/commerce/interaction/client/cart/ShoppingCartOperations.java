@@ -27,12 +27,12 @@ public interface ShoppingCartOperations {
 	                                         Map<@NotNull UUID, @NotNull @Positive Long> productsInStore
 	);
 
-	@PostMapping("change-quantity")
+	@PostMapping("/change-quantity")
 	ShoppingCartDto changeProductQuantity(@RequestParam String userId,
 	                                      @RequestBody ChangeProductQuantityRequest request)
 			throws NotAuthorizedUserException, NoProductsInShoppingCartException;
 
-	@PostMapping("remove")
+	@PostMapping("/remove")
 	ShoppingCartDto removeProductsFromShoppingCard(@RequestParam String userId,
 	                                               @RequestBody Set<@NotNull UUID> productIds)
 			throws NotAuthorizedUserException, NoProductsInShoppingCartException;

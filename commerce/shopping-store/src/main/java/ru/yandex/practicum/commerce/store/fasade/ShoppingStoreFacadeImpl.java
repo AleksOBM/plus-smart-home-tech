@@ -8,7 +8,7 @@ import ru.yandex.practicum.commerce.store.service.InteractionStoreService;
 
 @Service
 @RequiredArgsConstructor
-public class ShoppingStoreFacadeImpl {
+public class ShoppingStoreFacadeImpl implements ShoppingStoreFasade {
 
 	@Delegate
 	private final DatabaseStoreService databaseStoreService;

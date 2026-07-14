@@ -5,10 +5,12 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.annotation.Import;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import ru.yandex.practicum.commerce.cart.fasade.ShoppingCartFasade;
 import ru.yandex.practicum.commerce.interaction.annotations.Loggable;
+import ru.yandex.practicum.commerce.interaction.annotations.LoggingAspect;
 import ru.yandex.practicum.commerce.interaction.client.cart.ShoppingCartOperations;
 import ru.yandex.practicum.commerce.interaction.dto.ShoppingCartDto;
 import ru.yandex.practicum.commerce.interaction.exception.NoProductsInShoppingCartException;
@@ -21,6 +23,7 @@ import java.util.UUID;
 
 @Slf4j
 @RestController
+@Import(LoggingAspect.class)
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/shopping-cart")
 public class ShoppingCartController implements ShoppingCartOperations {

@@ -1,13 +1,11 @@
 package ru.yandex.practicum.commerce.interaction.exception;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
 import org.springframework.http.HttpStatus;
+import ru.yandex.practicum.commerce.interaction.error.CustomException;
 
-@Getter
-@AllArgsConstructor
-public class NoProductsInShoppingCartException extends RuntimeException {
+public class NoProductsInShoppingCartException extends CustomException {
 
-	private final HttpStatus httpStatus;
-	private final String userMessage;
+	public NoProductsInShoppingCartException(String userMessage) {
+		super(HttpStatus.NOT_FOUND, userMessage);
+	}
 }
