@@ -1,12 +1,12 @@
 package ru.yandex.practicum.commerce.interaction.client.store;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Pageable;
 import ru.yandex.practicum.commerce.interaction.dto.PageProductDto;
 import ru.yandex.practicum.commerce.interaction.dto.ProductDto;
+import ru.yandex.practicum.commerce.interaction.enums.QuantityState;
 import ru.yandex.practicum.commerce.interaction.exception.ProductNotFoundException;
-import ru.yandex.practicum.commerce.interaction.requests.SetProductQuantityStateRequest;
 
-import java.util.List;
 import java.util.UUID;
 
 @Slf4j
@@ -14,8 +14,8 @@ public class ShoppingStoreClientFallback implements
 		ShoppingStoreClient, ShoppingStoreOperations {
 
 	@Override
-	public PageProductDto getSoppingPageByCategory(String category, Integer pageNumber,
-	                                               Integer pageSize, List<String> sort
+	public PageProductDto getSoppingPageByCategory(String category,
+	                                               Pageable pageable
 	) {
 		log.info("Fallback to getSoppingPageByCategory");
 		return null;
@@ -42,7 +42,8 @@ public class ShoppingStoreClientFallback implements
 	}
 
 	@Override
-	public boolean setProductState(SetProductQuantityStateRequest request)
+	public boolean setProductQuantityState(UUID productId,
+	                                       QuantityState quantityState)
 			throws ProductNotFoundException {
 		log.info("Fallback to setProductState");
 		return false;

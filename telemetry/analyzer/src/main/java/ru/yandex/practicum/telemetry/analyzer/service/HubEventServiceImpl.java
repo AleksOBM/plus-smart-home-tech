@@ -100,11 +100,11 @@ public class HubEventServiceImpl implements HubEventService {
 			return;
 		}
 		log.debug("Сохранение действий");
-		actions.forEach((sensorId, action) ->
-				actionRepository.save(action)
+		actions.forEach(
+				(sensorId, action) -> actionRepository.save(action)
 		);
 	}
-	
+
 	private void updateScenario(@NonNull Scenario oldScenario, @NonNull Scenario newScenario) {
 		log.info("Обновление сценария");
 

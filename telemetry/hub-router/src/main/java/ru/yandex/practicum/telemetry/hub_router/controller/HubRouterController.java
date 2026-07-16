@@ -9,8 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.devh.boot.grpc.server.service.GrpcService;
 import org.springframework.lang.NonNull;
 import ru.yandex.practicum.grpc.telemetry.event.DeviceActionRequest;
-import ru.yandex.practicum.grpc.telemetry.hubrouter.HubRouterControllerGrpc
-		.HubRouterControllerImplBase;
+import ru.yandex.practicum.grpc.telemetry.hubrouter.HubRouterControllerGrpc.HubRouterControllerImplBase;
 import ru.yandex.practicum.telemetry.utils.TimestampUtils;
 
 @Slf4j

@@ -22,7 +22,7 @@ public class AnalyzerRunner implements CommandLineRunner {
 
 		log.info("Цикл запуска №{}", ++cycleNumber);
 
-		if(!hubEventProcessor.isRunning()) {
+		if (!hubEventProcessor.isRunning()) {
 			Thread hubEventsThread = new Thread(hubEventProcessor);
 			hubEventsThread.setName("HubEventHandlerThread");
 
@@ -32,7 +32,7 @@ public class AnalyzerRunner implements CommandLineRunner {
 			log.info("HubEventProcessor уже запущен");
 		}
 
-		if(!snapshotProcessor.isRunning()) {
+		if (!snapshotProcessor.isRunning()) {
 			if (!hubEventProcessor.isRunning()) {
 				log.info("HubEventProcessor не запущен");
 				return;

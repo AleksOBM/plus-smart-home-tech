@@ -11,6 +11,8 @@ import ru.yandex.practicum.commerce.interaction.enums.QuantityState;
 import java.util.UUID;
 
 /**
+ * Товар, продаваемый в интернет-магазине
+ * <p></p>
  * @param productId       Идентификатор товара в БД
  * @param productName     Наименование товара
  * @param description     Описание товара
