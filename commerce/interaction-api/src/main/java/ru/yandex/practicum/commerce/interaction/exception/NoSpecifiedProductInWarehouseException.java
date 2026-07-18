@@ -1,12 +1,13 @@
 package ru.yandex.practicum.commerce.interaction.exception;
 
 import org.springframework.http.HttpStatus;
-import ru.yandex.practicum.commerce.interaction.error.CustomException;
+
+import java.util.UUID;
 
 
 public class NoSpecifiedProductInWarehouseException extends CustomException {
 
-	public NoSpecifiedProductInWarehouseException(String userMessage) {
-		super(HttpStatus.NOT_FOUND, userMessage);
+	public NoSpecifiedProductInWarehouseException(UUID productId) {
+		super(HttpStatus.NOT_FOUND, "Продукт с id " + productId + " отсутствует на складе");
 	}
 }

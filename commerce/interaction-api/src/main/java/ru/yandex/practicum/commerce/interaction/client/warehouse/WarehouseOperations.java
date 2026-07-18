@@ -13,21 +13,51 @@ import ru.yandex.practicum.commerce.interaction.exception.SpecifiedProductAlread
 import ru.yandex.practicum.commerce.interaction.requests.AddProductToWarehouseRequest;
 import ru.yandex.practicum.commerce.interaction.requests.NewProductInWarehouseRequest;
 
+@SuppressWarnings("unused")
 public interface WarehouseOperations {
 
+	/**
+	 * Добавить новый товар на склад.
+	 * <p></p>
+	 *
+	 * @param request Описание нового товара для обработки складом.
+	 * @throws SpecifiedProductAlreadyInWarehouseException Ошибка, товар с таким описанием уже зарегистрирован на складе
+	 */
 	@PutMapping
-	void addProduct(@RequestBody NewProductInWarehouseRequest request)
+	void createNewProduct(@RequestBody NewProductInWarehouseRequest request)
 			throws SpecifiedProductAlreadyInWarehouseException;
 
+	/**
+	 * Предварительно проверить что количество товаров на
+	 * складе достаточно для данной корзиный продуктов.
+	 * <p></p>
+	 *
+	 * @param cartDto Корзина товаров.
+	 * @return {@link BookedProductsDto} - Общие сведения по бронированию
+	 * @throws ProductInShoppingCartLowQuantityInWarehouse Ошибка, товар из корзины не находится в требуемом количестве на складе
+	 */
 	@PostMapping("/check")
-	BookedProductsDto checkProduct(@RequestBody ShoppingCartDto cartDto)
+	BookedProductsDto checkProductQuantity(@RequestBody ShoppingCartDto cartDto)
 			throws ProductInShoppingCartLowQuantityInWarehouse;
 
+	/**
+	 * Принять товар на склад.
+	 * <p></p>
+	 *
+	 * @param request Запрос на добавление определенного
+	 *                количества определенного товара.
+	 * @throws NoSpecifiedProductInWarehouseException Нет информации о товаре на складе
+	 */
 	@PostMapping("/add")
-	void takeProduct(@RequestBody AddProductToWarehouseRequest request)
+	void addProductQuantity(@RequestBody AddProductToWarehouseRequest request)
 			throws NoSpecifiedProductInWarehouseException;
 
+	/**
+	 * Предоставить адрес склада для расчёта доставки.
+	 * <p></p>
+	 *
+	 * @return {@link AddressDto} - Актуальный адрес склада
+	 */
 	@GetMapping("/address")
-	AddressDto getAddress();
-
+	AddressDto getWarehouseAddress();
 }

@@ -34,7 +34,7 @@ public class DatabaseStoreServiceImpl implements DatabaseStoreService {
 	}
 
 	@Override
-	public ProductDto addNewProduct(ProductDto productDto) {
+	public ProductDto createNewProductInShoppingStore(ProductDto productDto) {
 		Product product = productRepository
 				.save(ProductMapper.toEntity(productDto));
 		return ProductMapper.toDto(product);

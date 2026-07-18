@@ -2,6 +2,7 @@ package ru.yandex.practicum.commerce.interaction.client.store;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Component;
 import ru.yandex.practicum.commerce.interaction.dto.PageProductDto;
 import ru.yandex.practicum.commerce.interaction.dto.ProductDto;
 import ru.yandex.practicum.commerce.interaction.enums.QuantityState;
@@ -10,6 +11,7 @@ import ru.yandex.practicum.commerce.interaction.exception.ProductNotFoundExcepti
 import java.util.UUID;
 
 @Slf4j
+@Component
 public class ShoppingStoreClientFallback implements
 		ShoppingStoreClient, ShoppingStoreOperations {
 
@@ -22,7 +24,7 @@ public class ShoppingStoreClientFallback implements
 	}
 
 	@Override
-	public ProductDto addNewProduct(ProductDto productDto) {
+	public ProductDto createNewProduct(ProductDto productDto) {
 		log.info("Fallback to addNewProduct");
 		return null;
 	}

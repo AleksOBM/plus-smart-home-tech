@@ -1,11 +1,9 @@
 package ru.yandex.practicum.commerce.cart.controller;
 
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Import;
+import org.springframework.lang.NonNull;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import ru.yandex.practicum.commerce.cart.fasade.ShoppingCartFasade;
@@ -30,41 +28,51 @@ public class ShoppingCartController implements ShoppingCartOperations {
 
 	private final ShoppingCartFasade shoppingCartFasade;
 
-	/// Получить актуальную корзину для авторизованного пользователя.
 	@Loggable
 	@Override
-	public ShoppingCartDto getShoppingCart(String userId)
+	public ShoppingCartDto getShoppingCart(String username)
 			throws NotAuthorizedUserException {
-		return null;
+		checkUser(username);
+		return shoppingCartFasade.getShoppingCart(username);
 	}
 
 	@Override
 	public ShoppingCartDto addProductToShoppingCart(
-			String userId,
-			@NotNull
-			@NotEmpty
-			Map<@NotNull UUID, @NotNull @Positive Long> productsInStore
+			String username,
+			Map<UUID, Integer> productsInStore
 	) {
-		return null;
+		checkUser(username);
+		return shoppingCartFasade.addProductToShoppingCart(username, productsInStore);
 	}
 
 	@Override
-	public ShoppingCartDto changeProductQuantity(String userId,
+	public ShoppingCartDto changeProductQuantity(String username,
 	                                             ChangeProductQuantityRequest request
 	) throws NotAuthorizedUserException, NoProductsInShoppingCartException {
-		return null;
+		checkUser(username);
+		return shoppingCartFasade.changeProductQuantity(username, request);
 	}
 
 	@Override
-	public ShoppingCartDto removeProductsFromShoppingCard(String userId,
-	                                                      Set<@NotNull UUID> productIds
+	public ShoppingCartDto removeProductsFromShoppingCard(String username,
+	                                                      Set<UUID> productIds
 	) throws NotAuthorizedUserException, NoProductsInShoppingCartException {
-		return null;
+		checkUser(username);
+		return shoppingCartFasade.removeProductsFromShoppingCard(username, productIds);
 	}
 
 	@Override
-	public void deactivateShoppingCart(String userId)
+	public void deactivateShoppingCart(String username)
 			throws NotAuthorizedUserException {
+		checkUser(username);
+		shoppingCartFasade.deactivateShoppingCart(username);
+	}
+
+	private void checkUser(@NonNull String username)
+			throws NotAuthorizedUserException {
+		if (username.isBlank()) {
+			throw new NotAuthorizedUserException(username);
+		}
 	}
 
 }

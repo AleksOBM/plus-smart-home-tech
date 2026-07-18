@@ -39,8 +39,8 @@ public class ShoppingStoreController implements ShoppingStoreOperations {
 
 	@Loggable
 	@Override
-	public ProductDto addNewProduct(ProductDto productDto) {
-		return shoppingStoreFasade.addNewProduct(productDto);
+	public ProductDto createNewProduct(ProductDto productDto) {
+		return shoppingStoreFasade.createNewProductInShoppingStore(productDto);
 	}
 
 	@Loggable

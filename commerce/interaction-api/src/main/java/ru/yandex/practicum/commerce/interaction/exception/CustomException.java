@@ -1,4 +1,4 @@
-package ru.yandex.practicum.commerce.interaction.error;
+package ru.yandex.practicum.commerce.interaction.exception;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

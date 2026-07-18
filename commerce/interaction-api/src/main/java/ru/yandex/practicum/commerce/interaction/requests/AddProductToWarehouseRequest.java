@@ -1,7 +1,7 @@
 package ru.yandex.practicum.commerce.interaction.requests;
 
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.Positive;
 
 import java.util.UUID;
 
@@ -11,10 +11,11 @@ import java.util.UUID;
 /// @param quantity  Количество единиц товара для добавления на склад
 public record AddProductToWarehouseRequest(
 
+		@NotNull
 		UUID productId,
 
 		@NotNull
-		@Size(min = 1)
+		@Positive
 		Integer quantity
 ) {
 }

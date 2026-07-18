@@ -1,32 +1,16 @@
-CREATE TABLE IF NOT EXISTS products (
-    product_id UUID NOT NULL PRIMARY KEY,
-    product_name VARCHAR(100) NOT NULL,
-    description VARCHAR(500) NOT NULL,
-    image_src TEXT,
-    quantity_state VARCHAR(10) NOT NULL,
-    product_state VARCHAR(10) NOT NULL,
-    product_category VARCHAR(10),
-    price REAL NOT NULL,
-
-    CONSTRAINT products_quantity_state_check
-        CHECK (quantity_state IN ('ENDED', 'FEW', 'ENOUGH', 'MANY')),
-
-    CONSTRAINT products_product_state_check
-        CHECK (product_state IN ('ACTIVE', 'DEACTIVATE')),
-
-    CONSTRAINT products_product_category_check
-        CHECK (product_category IN ('LIGHTING', 'CONTROL', 'SENSORS'))
-);
-
 CREATE TABLE IF NOT EXISTS shopping_carts (
-    id UUID NOT NULL PRIMARY KEY,
-    user_id VARCHAR(50) NOT NULL,
+    id UUID NOT NULL PRIMARY KEY DEFAULT gen_random_uuid(),
+    username VARCHAR(50) NOT NULL,
     is_open BOOLEAN NOT NULL
 );
 
+CREATE UNIQUE INDEX IF NOT EXISTS uq_open_cart_per_user
+ON shopping_carts(username)
+WHERE is_open = true;
+
 CREATE TABLE IF NOT EXISTS products_in_cart (
     shopping_cart_id UUID REFERENCES shopping_carts(id),
-    product_id UUID REFERENCES products(product_id),
+    product_id UUID NOT NULL,
     product_count INT,
     PRIMARY KEY (shopping_cart_id, product_id)
 );

@@ -2,6 +2,7 @@ package ru.yandex.practicum.commerce.interaction.requests;
 
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
+import lombok.Builder;
 import ru.yandex.practicum.commerce.interaction.dto.DimensionDto;
 
 import java.util.UUID;
@@ -12,6 +13,7 @@ import java.util.UUID;
 /// @param fragile   Признак хрупкости
 /// @param dimension Размеры товара
 /// @param weight    Вес товара
+@Builder
 public record NewProductInWarehouseRequest(
 
 		@NotNull
@@ -24,6 +26,6 @@ public record NewProductInWarehouseRequest(
 
 		@NotNull
 		@Positive
-		Double weight
+		Float weight
 ) {
 }

@@ -21,9 +21,6 @@ spring:
   jackson:
     serialization:
       INDENT_OUTPUT: true
-  cloud:
-    loadbalancer:
-      enabled: false
 
 management:
   endpoints:

@@ -45,7 +45,7 @@ public interface ShoppingStoreOperations {
 	 * @return {@link ProductDto} - {@code 200 OK} Товар создан с присвоением соответствующего ID
 	 */
 	@PutMapping
-	ProductDto addNewProduct(@RequestBody @NotNull @Valid ProductDto productDto);
+	ProductDto createNewProduct(@RequestBody @NotNull @Valid ProductDto productDto);
 
 	/**
 	 * Обновление товара в ассортименте, например уточнение описания, характеристик и т.д.

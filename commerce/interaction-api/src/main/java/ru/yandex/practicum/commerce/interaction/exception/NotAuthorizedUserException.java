@@ -1,10 +1,9 @@
 package ru.yandex.practicum.commerce.interaction.exception;
 
 import org.springframework.http.HttpStatus;
-import ru.yandex.practicum.commerce.interaction.error.CustomException;
 
 public class NotAuthorizedUserException extends CustomException {
-	public NotAuthorizedUserException(String userMessage) {
-		super(HttpStatus.UNAUTHORIZED, userMessage);
+	public NotAuthorizedUserException(String username) {
+		super(HttpStatus.UNAUTHORIZED, "Пользователь " + username + " не авторизован");
 	}
 }

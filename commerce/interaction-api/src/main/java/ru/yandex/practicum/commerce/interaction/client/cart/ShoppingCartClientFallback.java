@@ -3,6 +3,7 @@ package ru.yandex.practicum.commerce.interaction.client.cart;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Component;
 import ru.yandex.practicum.commerce.interaction.dto.ShoppingCartDto;
 import ru.yandex.practicum.commerce.interaction.exception.NoProductsInShoppingCartException;
 import ru.yandex.practicum.commerce.interaction.exception.NotAuthorizedUserException;
@@ -13,6 +14,7 @@ import java.util.Set;
 import java.util.UUID;
 
 @Slf4j
+@Component
 public class ShoppingCartClientFallback implements
 		ShoppingCartOperations, ShoppingCartClient {
 
@@ -28,7 +30,7 @@ public class ShoppingCartClientFallback implements
 			String userId,
 			@NotNull
 			@Positive
-			Map<@NotNull UUID, @NotNull @Positive Long> productsInStore
+			Map<@NotNull UUID, @NotNull @Positive Integer> productsInStore
 	) {
 		log.info("ShoppingCartFallback.addProductToShoppingCart()");
 		return null;

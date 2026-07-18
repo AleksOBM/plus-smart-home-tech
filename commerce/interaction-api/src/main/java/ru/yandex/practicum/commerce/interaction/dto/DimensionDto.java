@@ -2,6 +2,7 @@ package ru.yandex.practicum.commerce.interaction.dto;
 
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
+import lombok.Builder;
 
 /**
  * Размеры товара
@@ -10,18 +11,19 @@ import jakarta.validation.constraints.Positive;
  * @param height Высота
  * @param depth  Глубина
  */
+@Builder
 public record DimensionDto(
 
 		@NotNull
 		@Positive
-		Double width,
+		Float width,
 
 		@NotNull
 		@Positive
-		Double height,
+		Float height,
 
 		@NotNull
 		@Positive
-		Double depth
+		Float depth
 ) {
 }

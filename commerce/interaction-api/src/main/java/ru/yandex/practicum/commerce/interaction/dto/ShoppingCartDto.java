@@ -1,6 +1,7 @@
 package ru.yandex.practicum.commerce.interaction.dto;
 
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 import lombok.Builder;
 
 import java.util.Map;
@@ -19,6 +20,6 @@ public record ShoppingCartDto(
 		UUID shoppingCartId,
 
 		@NotNull
-		Map<UUID, Integer> products
+		Map<@NotNull UUID, @NotNull @Positive Integer> products
 ) {
 }

@@ -16,7 +16,7 @@ public interface DatabaseStoreService {
 	PageProductDto getSoppingPageByCategory(
 			ProductCategory category, Pageable pageable);
 
-	ProductDto addNewProduct(ProductDto productDto);
+	ProductDto createNewProductInShoppingStore(ProductDto productDto);
 
 	ProductDto updateProduct(ProductDto productDto);
 
