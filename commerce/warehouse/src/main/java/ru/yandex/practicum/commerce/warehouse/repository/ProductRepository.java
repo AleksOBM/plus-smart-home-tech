@@ -11,8 +11,6 @@ import java.util.UUID;
 
 public interface ProductRepository extends JpaRepository<WarehouseProduct, UUID> {
 
-	Integer getQuantityFreeByProductId(UUID id);
-
 	@Query("""
 			    select new ru.yandex.practicum.commerce.warehouse.model.ProductQuantityProjection(
 			        p.productId,

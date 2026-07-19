@@ -33,7 +33,7 @@ public interface ShoppingCartOperations {
 	 * Добавить товар в корзину.
 	 * <p></p>
 	 *
-	 * @param userName        Имя пользователя
+	 * @param username        Имя пользователя
 	 * @param productsInStore Отображение идентификатора товара на отобранное количество.
 	 * @return {@link ShoppingCartDto} - Корзина товаров с изменениями
 	 * @throws NotAuthorizedUserException Имя пользователя не должно быть пустым

@@ -37,6 +37,7 @@ public interface WarehouseOperations {
 	 * @throws ProductInShoppingCartLowQuantityInWarehouse Ошибка, товар из корзины не находится в требуемом количестве на складе
 	 */
 	@PostMapping("/check")
+	@SuppressWarnings("UnusedReturnValue")
 	BookedProductsDto checkProductQuantity(@RequestBody ShoppingCartDto cartDto)
 			throws ProductInShoppingCartLowQuantityInWarehouse;
 

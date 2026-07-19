@@ -6,6 +6,7 @@ import ru.yandex.practicum.commerce.interaction.dto.DimensionDto;
 import ru.yandex.practicum.commerce.warehouse.model.Dimension;
 
 @UtilityClass
+@SuppressWarnings("unused")
 public class DimensionMapper {
 
 	public Dimension toEntity(@NonNull DimensionDto dto) {
