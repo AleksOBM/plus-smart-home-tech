@@ -1,5 +1,0 @@
-sht:
-  servers.bootstrap: localhost:9092
-  aggregator.topics:
-    sensors: telemetry.sensors.v1
-    snapshots: telemetry.snapshots.v1

@@ -1,7 +1,7 @@
 package ru.yandex.practicum.telemetry.analyzer.mapper;
 
+import lombok.NonNull;
 import lombok.experimental.UtilityClass;
-import org.springframework.lang.NonNull;
 import ru.yandex.practicum.kafka.telemetry.event.DeviceActionAvro;
 import ru.yandex.practicum.telemetry.analyzer.model.Action;
 import ru.yandex.practicum.telemetry.analyzer.model.ActionType;

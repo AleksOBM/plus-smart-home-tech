@@ -1,6 +1,9 @@
 server.port: 8888
 
 spring:
+  main:
+    banner-mode: off
+    log-startup-info: false
   application:
     name: config-server
   profiles:
@@ -9,5 +12,6 @@ spring:
     config:
       server:
         native:
-          searchLocations:
-            - classpath:config/telemetry/{application}
+          search-locations:
+            - file:../config-repo
+            - file:../config-repo/telemetry

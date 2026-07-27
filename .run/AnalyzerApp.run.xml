@@ -1,0 +1,10 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="AnalyzerApp" type="Spring Boot" factoryName="Spring Boot" folderName="telemetry" nameIsGenerated="true">
+    <option name="MAIN_CLASS_NAME" value="ru.yandex.practicum.telemetry.analyzer.AnalyzerApp" />
+    <module name="analyzer" />
+    <option name="WORKING_DIRECTORY" value="./telemetry/analyzer" />
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>

@@ -10,8 +10,7 @@ import org.springframework.stereotype.Service;
 import ru.yandex.practicum.grpc.telemetry.event.ActionTypeProto;
 import ru.yandex.practicum.grpc.telemetry.event.DeviceActionProto;
 import ru.yandex.practicum.grpc.telemetry.event.DeviceActionRequest;
-import ru.yandex.practicum.grpc.telemetry.hubrouter.HubRouterControllerGrpc
-		.HubRouterControllerBlockingStub;
+import ru.yandex.practicum.grpc.telemetry.hubrouter.HubRouterControllerGrpc.HubRouterControllerBlockingStub;
 import ru.yandex.practicum.kafka.telemetry.event.*;
 import ru.yandex.practicum.telemetry.analyzer.model.Condition;
 import ru.yandex.practicum.telemetry.analyzer.model.ConditionOperation;
@@ -29,6 +28,7 @@ import java.util.Set;
 @RequiredArgsConstructor
 public class SnapshotServiceImpl implements SnapshotService {
 
+	@SuppressWarnings("unused")
 	@GrpcClient("hub-router")
 	private HubRouterControllerBlockingStub hubRouterClient;
 
@@ -135,25 +135,25 @@ public class SnapshotServiceImpl implements SnapshotService {
 					.build();
 
 			log.info("""
-					Отправка gRPC сообщения:
-					{
-					  "hub_id": "{}",
-					  "scenario_name": "{}",
-					  "action": {
-					    "sensor_id": "{}",
-					    "type": "{}",
-					    "value": "{}"
-					  },
-					  "timestamp": "{}"
-					}
-					""",
+							Отправка gRPC сообщения:
+							{
+							  "hub_id": "{}",
+							  "scenario_name": "{}",
+							  "action": {
+							    "sensor_id": "{}",
+							    "type": "{}",
+							    "value": "{}"
+							  },
+							  "timestamp": "{}"
+							}
+							""",
 					request.getHubId(),
 					request.getScenarioName(),
 					request.getAction().getSensorId(),
 					request.getAction().getType(),
 					request.getAction().getValue(),
 					TimestampUtils.toString(request.getTimestamp())
-					);
+			);
 
 			try {
 				var response = hubRouterClient.handleDeviceAction(request);
@@ -195,6 +195,7 @@ public class SnapshotServiceImpl implements SnapshotService {
 		}
 	}
 
+	@SuppressWarnings("SwitchStatementWithTooFewBranches")
 	private @Nullable Boolean checkCondition(@NonNull LightSensorAvro event,
 	                                         @NonNull Condition condition
 	) {
@@ -208,6 +209,7 @@ public class SnapshotServiceImpl implements SnapshotService {
 		}
 	}
 
+	@SuppressWarnings("SwitchStatementWithTooFewBranches")
 	private @Nullable Boolean checkCondition(@NonNull MotionSensorAvro event,
 	                                         @NonNull Condition condition
 	) {
@@ -228,6 +230,7 @@ public class SnapshotServiceImpl implements SnapshotService {
 		}
 	}
 
+	@SuppressWarnings("SwitchStatementWithTooFewBranches")
 	private @Nullable Boolean checkCondition(@NonNull SwitchSensorAvro event,
 	                                         @NonNull Condition condition
 	) {
@@ -248,6 +251,7 @@ public class SnapshotServiceImpl implements SnapshotService {
 		}
 	}
 
+	@SuppressWarnings("SwitchStatementWithTooFewBranches")
 	private @Nullable Boolean checkCondition(@NonNull TemperatureSensorAvro event,
 	                                         @NonNull Condition condition
 	) {
