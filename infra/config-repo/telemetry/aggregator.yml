@@ -1,0 +1,9 @@
+sht:
+  servers.bootstrap: localhost:9092
+  aggregator:
+#    kafka:
+#      consumer:
+#        poll-timeout: 100ms
+    topics:
+      sensors: telemetry.sensors.v1
+      snapshots: telemetry.snapshots.v1

@@ -14,7 +14,7 @@ public class TimestampUtils {
 
 	private final ZoneId zoneId = ZoneId.systemDefault();
 
-	public final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS");
+	public final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS");
 
 	public Timestamp toTimestamp(@NonNull Instant instant) {
 		return Timestamp.newBuilder()
@@ -35,7 +35,7 @@ public class TimestampUtils {
 	}
 
 	public String toString(@NonNull Timestamp timestamp) {
-		return FORMATTER.format(toLocalDateTime(timestamp));
+		return formatter.format(toLocalDateTime(timestamp));
 	}
 
 	public String toString(long longTimestamp) {

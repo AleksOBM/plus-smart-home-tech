@@ -1,0 +1,10 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="OrderServiceApp" type="Spring Boot" factoryName="Spring Boot" folderName="commerce" nameIsGenerated="true">
+    <option name="MAIN_CLASS_NAME" value="ru.yandex.practicum.order.OrderServiceApp" />
+    <module name="order-service" />
+    <option name="WORKING_DIRECTORY" value="./commerce/order-service" />
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>

@@ -1,0 +1,10 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="HubRouterApp" type="Spring Boot" factoryName="Spring Boot" nameIsGenerated="true">
+    <option name="MAIN_CLASS_NAME" value="ru.yandex.practicum.telemetry.hub_router.HubRouterApp" />
+    <module name="hub-router" />
+    <option name="WORKING_DIRECTORY" value="./telemetry/hub-router" />
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>

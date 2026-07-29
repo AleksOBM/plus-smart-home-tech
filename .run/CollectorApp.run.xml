@@ -1,0 +1,10 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="CollectorApp" type="Spring Boot" factoryName="Spring Boot" folderName="telemetry" nameIsGenerated="true">
+    <option name="MAIN_CLASS_NAME" value="ru.yandex.practicum.telemetry.collector.CollectorApp" />
+    <module name="collector" />
+    <option name="WORKING_DIRECTORY" value="./telemetry/collector" />
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>

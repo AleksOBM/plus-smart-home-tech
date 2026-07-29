@@ -1,5 +1,6 @@
 package ru.yandex.practicum.telemetry.aggregator.controller;
 
+import jakarta.annotation.PreDestroy;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
@@ -16,7 +17,6 @@ import ru.yandex.practicum.kafka.telemetry.event.SensorEventAvro;
 import ru.yandex.practicum.kafka.telemetry.event.SensorsSnapshotAvro;
 import ru.yandex.practicum.telemetry.aggregator.service.AggregatorService;
 
-import javax.annotation.PreDestroy;
 import java.time.Duration;
 import java.util.HashMap;
 import java.util.List;
