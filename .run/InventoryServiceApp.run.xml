@@ -1,0 +1,10 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="InventoryServiceApp" type="Spring Boot" factoryName="Spring Boot" folderName="commerce">
+    <option name="MAIN_CLASS_NAME" value="ru.yandex.practicum.inventory.InventoryServiceApp" />
+    <module name="inventory-service" />
+    <option name="WORKING_DIRECTORY" value="./commerce/inventory-service" />
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>

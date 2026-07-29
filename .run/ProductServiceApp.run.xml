@@ -1,0 +1,10 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="ProductServiceApp" type="Spring Boot" factoryName="Spring Boot" folderName="commerce" nameIsGenerated="true">
+    <option name="MAIN_CLASS_NAME" value="ru.yandex.practicum.product.ProductServiceApp" />
+    <module name="product-service" />
+    <option name="WORKING_DIRECTORY" value="./commerce/product-service" />
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>
