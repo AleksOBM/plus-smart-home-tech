@@ -3,9 +3,10 @@ package ru.yandex.practicum.order.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
-import ru.yandex.practicum.order.dto.CreateOrderRequest;
+import ru.yandex.practicum.order.dto.data.OrderData;
 import ru.yandex.practicum.order.dto.OrderDto;
 import ru.yandex.practicum.order.entity.Order;
+import ru.yandex.practicum.order.entity.OrderStatus;
 import ru.yandex.practicum.order.exception.NotFoundException;
 import ru.yandex.practicum.order.mapper.OrderItemMapper;
 import ru.yandex.practicum.order.mapper.OrderMapper;
@@ -44,26 +45,27 @@ public class OrderServiceImpl implements OrderService {
 	}
 
 	@Override
-	public OrderDto createOrder(@NonNull CreateOrderRequest request) {
-		var totalPrice = request.items().stream()
+	public OrderDto createOrder(@NonNull OrderData orderData) {
+		var totalPrice = orderData.items().stream()
 				.map(itemRequest -> itemRequest.price()
 						.multiply(BigDecimal.valueOf(itemRequest.quantity()))
 				)
 				.reduce(BigDecimal.ZERO, BigDecimal::add);
 
 		var orderWithoutItems = orderRepository.save(Order.builder()
-				.customerName(request.customerName())
-				.customerEmail(request.customerEmail())
+				.customerName(orderData.customerName())
+				.customerEmail(orderData.customerEmail())
 				.totalPrice(totalPrice)
 				.build()
 		);
 
 		var order = orderWithoutItems.toBuilder()
-				.items(request.items().stream()
-						.map(itemRequest ->
-								OrderItemMapper.toEntity(itemRequest, orderWithoutItems))
+				.items(orderData.items().stream()
+						.map(itemData ->
+								OrderItemMapper.toEntity(itemData, orderWithoutItems))
 						.toList()
 				)
+				.status(OrderStatus.CONFIRMED)
 				.build();
 
 		return OrderMapper.toDto(orderRepository.save(order));

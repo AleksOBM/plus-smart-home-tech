@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.order.dto.CreateOrderRequest;
 import ru.yandex.practicum.order.dto.OrderDto;
+import ru.yandex.practicum.order.service.OrderOrchestrationService;
 import ru.yandex.practicum.order.service.OrderService;
 
 import java.util.List;
@@ -18,6 +19,7 @@ import java.util.List;
 public class OrderController {
 
 	private final OrderService orderService;
+	private final OrderOrchestrationService orchestrationService;
 
 	/**
 	 * Все заказы
@@ -26,7 +28,7 @@ public class OrderController {
 	 */
 	@GetMapping
 	public List<OrderDto> getAllOrders() {
-		log.info("GET /api/categories");
+		log.info("GET /api/orders");
 		return orderService.getAllOrders();
 	}
 
@@ -38,7 +40,7 @@ public class OrderController {
 	 */
 	@GetMapping("/{id}")
 	public OrderDto getOrderById(@PathVariable Long id) {
-		log.info("GET /api/categories/{}", id);
+		log.info("GET /api/orders/{}", id);
 		return orderService.getOrderById(id);
 	}
 
@@ -50,7 +52,7 @@ public class OrderController {
 	 */
 	@GetMapping("/by-email")
 	public List<OrderDto> getOrdersByEmail(@RequestParam String email) {
-		log.info("GET /api/categories/by-email\nparam:{}", email);
+		log.info("GET /api/orders/by-email\nparam:{}", email);
 		return orderService.getOrdersByEmail(email);
 	}
 
@@ -66,8 +68,8 @@ public class OrderController {
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
 	public OrderDto createOrder(@Valid @RequestBody CreateOrderRequest request) {
-		log.info("POST /api/categories\nbody:{}", request);
-		return orderService.createOrder(request);
+		log.info("POST /api/orders\nbody:{}", request);
+		return orchestrationService.createOrder(request);
 	}
 
 }

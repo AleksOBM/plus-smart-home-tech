@@ -1,7 +1,7 @@
 package ru.yandex.practicum.order.service;
 
 import org.springframework.transaction.annotation.Transactional;
-import ru.yandex.practicum.order.dto.CreateOrderRequest;
+import ru.yandex.practicum.order.dto.data.OrderData;
 import ru.yandex.practicum.order.dto.OrderDto;
 
 import java.util.List;
@@ -17,5 +17,5 @@ public interface OrderService {
 
 	List<OrderDto> getOrdersByEmail(String email);
 
-	OrderDto createOrder(CreateOrderRequest request);
+	OrderDto createOrder(OrderData data);
 }
