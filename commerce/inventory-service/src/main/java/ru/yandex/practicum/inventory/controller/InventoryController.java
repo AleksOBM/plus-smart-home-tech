@@ -86,4 +86,15 @@ public class InventoryController {
 		log.info("POST /api/inventory/reserve\nbody:{}", request);
 		return inventoryService.reserveProduct(request);
 	}
+
+	/**
+	 * Отменить резервирование товара
+	 * @param request запрос на отмену резервирования товара
+	 * @return {@link ReserveResponse} - результат отмены резервирования товара
+	 */
+	@PostMapping("/release")
+	public ReserveResponse releaseProduct(@Valid @RequestBody ReserveRequest request) {
+		log.info("POST /api/inventory/release\nbody:{}", request);
+		return inventoryService.releaseProduct(request);
+	}
 }

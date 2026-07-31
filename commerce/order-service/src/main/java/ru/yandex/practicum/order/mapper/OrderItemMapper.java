@@ -2,8 +2,8 @@ package ru.yandex.practicum.order.mapper;
 
 import lombok.NonNull;
 import lombok.experimental.UtilityClass;
+import ru.yandex.practicum.order.dto.data.OrderItemData;
 import ru.yandex.practicum.order.dto.OrderItemDto;
-import ru.yandex.practicum.order.dto.OrderItemRequest;
 import ru.yandex.practicum.order.entity.Order;
 import ru.yandex.practicum.order.entity.OrderItem;
 
@@ -20,7 +20,7 @@ public class OrderItemMapper {
 				.build();
 	}
 
-	public OrderItem toEntity(@NonNull OrderItemRequest request, Order order) {
+	public OrderItem toEntity(@NonNull OrderItemData request, Order order) {
 		return OrderItem.builder()
 				.order(order)
 				.productId(request.productId())
