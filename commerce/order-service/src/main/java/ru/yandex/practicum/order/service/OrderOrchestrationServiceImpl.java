@@ -1,24 +1,30 @@
 package ru.yandex.practicum.order.service;
 
-import feign.FeignException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.lang.NonNull;
+import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
-import ru.yandex.practicum.order.dto.*;
+import ru.yandex.practicum.order.dto.CreateOrderRequest;
+import ru.yandex.practicum.order.dto.OrderDto;
+import ru.yandex.practicum.order.dto.data.OrderContext;
 import ru.yandex.practicum.order.dto.data.OrderData;
 import ru.yandex.practicum.order.dto.data.OrderItemData;
 import ru.yandex.practicum.order.dto.feign.ProductDto;
 import ru.yandex.practicum.order.dto.feign.ReserveRequest;
 import ru.yandex.practicum.order.dto.feign.ReserveResponse;
-import ru.yandex.practicum.order.exception.ExceptionMapper;
+import ru.yandex.practicum.order.entity.OrderStatus;
 import ru.yandex.practicum.order.exception.OrderProcessingException;
+import ru.yandex.practicum.order.exception.ServiceUnavailableException;
 import ru.yandex.practicum.order.feign.InventoryClient;
 import ru.yandex.practicum.order.feign.ProductClient;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Supplier;
 
 @Slf4j
 @Service
@@ -32,55 +38,56 @@ public class OrderOrchestrationServiceImpl implements OrderOrchestrationService 
 	@Override
 	public OrderDto createOrder(@NonNull CreateOrderRequest request) {
 
-		log.debug("Инициализация запроса");
+		log.trace("Инициализация запроса");
 		var productIdToQuantity = new HashMap<Long, Integer>();
 		request.items().forEach(itemRequest -> productIdToQuantity
 				.merge(itemRequest.productId(), itemRequest.quantity(), Integer::sum)
 		);
-
 		var items = new ArrayList<OrderItemData>();
 
-		log.debug("Резервирование товаров");
-		var reserveRequests = new ArrayList<ReserveRequest>();
+		log.info("Резервирование товаров: {}", productIdToQuantity);
+		var reservationRequests = new ArrayList<ReserveRequest>();
 		for (Map.Entry<Long, Integer> product : productIdToQuantity.entrySet()) {
-			long productId = product.getKey();
-			int quantity = product.getValue();
 
-			ProductDto productDto = getProductById(productId);
-			if (!productDto.active()) {
-				log.debug("Товар с id={} товар снят с продажи", productId);
-				if (!reserveRequests.isEmpty()) {
-					log.debug("Отмена резервирования товаров");
-					for (ReserveRequest reserveRequest : reserveRequests) {
-						ReserveResponse reserveResponse = releaseReservedProduct(reserveRequest);
-						log.debug("Резервирование товара отменено: {}", reserveResponse);
-					}
-				}
-				throw new OrderProcessingException(
-						String.format("Товар с id=%s товар снят с продажи", productId)
-				);
+			log.trace("Инициализация контекста");
+			OrderContext context = OrderContext.builder()
+					.productId(product.getKey())
+					.customerName(request.customerName())
+					.customerEmail(request.customerEmail())
+					.quantity(product.getValue())
+					.build();
+
+			log.debug("Получение данных товара из product-service");
+			ProductDto productDto = getProduct(context, reservationRequests);
+			if (productDto == null) {
+				context = context.toBuilder()
+						.productName("Товар #%s (ожидает проверки)".formatted(product.getKey()))
+						.price(BigDecimal.ZERO)
+						.build();
+				addProductToOrder(context, items);
+
+				return savePendingOrder(context, items);
 			}
 
-			ReserveRequest reserveRequest = new ReserveRequest(
-					productId,
-					quantity
-			);
-			ReserveResponse reserveResponse = reserveProduct(reserveRequest);
-			reserveRequests.add(reserveRequest);
-			items.add(OrderItemData.builder()
-					.productId(productId)
+			context = context.toBuilder()
 					.productName(productDto.name())
-					.quantity(quantity)
 					.price(productDto.price())
-					.build()
-			);
-			log.debug("Товар успешно зарезервирован: {}", reserveResponse);
+					.build();
+
+			addProductToOrder(context, items);
+
+			log.debug("Резервирование товара с id={}", product.getKey());
+			ReserveResponse response = reserveProduct(context, reservationRequests);
+			if (response == null) {
+				return savePendingOrder(context, items);
+			}
 		}
 
-		log.debug("Инициализация данных заказа");
+		log.trace("Инициализация данных заказа");
 		OrderData orderData = OrderData.builder()
-				.customerEmail(request.customerEmail())
 				.customerName(request.customerName())
+				.customerEmail(request.customerEmail())
+				.status(OrderStatus.CONFIRMED)
 				.items(items)
 				.build();
 
@@ -88,45 +95,148 @@ public class OrderOrchestrationServiceImpl implements OrderOrchestrationService 
 		return orderService.createOrder(orderData);
 	}
 
-	private ReserveResponse reserveProduct(ReserveRequest request) {
+	private void addProductToOrder(@NonNull OrderContext context,
+	                               @NonNull Collection<OrderItemData> items) {
+		log.trace("Добавление товара с id={} в заказ", context.productId());
+		items.add(OrderItemData.builder()
+				.productId(context.productId())
+				.productName(context.productName())
+				.quantity(context.quantity())
+				.price(context.price())
+				.build()
+		);
+	}
+
+	private OrderDto savePendingOrder(@NonNull OrderContext context,
+	                                  Collection<OrderItemData> items) {
+		log.trace("Инициализация данных заказа со статусом PENDING");
+		OrderData orderData = OrderData.builder()
+				.customerName(context.customerName())
+				.customerEmail(context.customerEmail())
+				.status(OrderStatus.PENDING_CONFIRMATION)
+				.statusDetails("Заказ требует ручной проверки")
+				.items(items)
+				.build();
+
+		log.debug("Сохранение заказа со статусом PENDING");
+		return orderService.createOrder(orderData);
+	}
+
+	@Nullable
+	private ProductDto getProduct(OrderContext context,
+	                              Collection<ReserveRequest> requests) {
+		ProductDto productDto;
+		var productCallResult = executeRemoteCall(
+				() -> productClient.getProductById(context.productId())
+		);
+		switch (productCallResult) {
+			case RemoteCallResult.Success(var value) -> productDto = value;
+			case RemoteCallResult.Failure(var message) -> {
+				log.warn("Получено бизнес-исключение при получении заказа. Заказ отклонен.");
+				throw new OrderProcessingException(message);
+			}
+			case RemoteCallResult.Degraded(var cause) -> {
+				log.warn("Сервис товаров недоступен. {}", cause.getMessage());
+				if (!requests.isEmpty()) {
+					releaseReservedProducts(requests);
+				}
+				return null;
+			}
+		}
+
+		log.debug("Проверка товара");
+		if (!productDto.active()) {
+			log.debug("Товар с id={} товар снят с продажи", context.productId());
+			if (!requests.isEmpty()) {
+				releaseReservedProducts(requests);
+			}
+			throw new OrderProcessingException(
+					"Товар с id=%s товар снят с продажи".formatted(context.productId())
+			);
+		}
+
+		return productDto;
+	}
+
+	@Nullable
+	private ReserveResponse reserveProduct(@NonNull OrderContext context,
+	                                       Collection<ReserveRequest> requests) {
+		ReserveRequest request = new ReserveRequest(
+				context.productId(),
+				context.quantity()
+		);
+
+		ReserveResponse reserveResponse;
+		var reserveCallResult = executeRemoteCall(
+				() -> inventoryClient.reserveProduct(request)
+		);
+		switch (reserveCallResult) {
+			case RemoteCallResult.Success(var response) -> {
+				requests.add(request);
+				reserveResponse = response;
+				log.debug("Товар успешно зарезервирован: {}", response);
+			}
+			case RemoteCallResult.Failure(var message) -> {
+				log.warn("Получено бизнес-исключение при резервировании заказа. Заказ отклонен.");
+				throw new OrderProcessingException(message);
+			}
+			case RemoteCallResult.Degraded(var cause) -> {
+				log.warn("Сервис склада недоступен. Сохранение заказа. {}", cause.getMessage());
+				if (!requests.isEmpty()) {
+					releaseReservedProducts(requests);
+				}
+
+				return null;
+			}
+		}
+
+		return reserveResponse;
+	}
+
+	private void releaseReservedProducts(@NonNull Collection<ReserveRequest> requests) {
+		log.debug("Отмена резервирования товаров {}", requests);
+		requests.forEach(this::releaseReservation);
+	}
+
+	private void releaseReservation(ReserveRequest request) {
 		try {
-			return inventoryClient.reserveProduct(request);
-		} catch (FeignException e) {
-			throw ExceptionMapper.mapInventoryException(e)
-					.orElseThrow(() ->
-							new RuntimeException(
-									"Не удалось зарезервировать товар с id=%s"
-											.formatted(request.productId())
-							)
-					);
+			switch (executeRemoteCall(() -> inventoryClient.releaseProduct(request))) {
+
+				case RemoteCallResult.Success(var response) ->
+						log.debug("Резервирование товара {} отменено: {}",
+								request.productId(), response);
+
+				case RemoteCallResult.Failure(var message) -> log.warn(
+						"Не удалось отменить резерв товара {}: {}",
+						request.productId(),
+						message
+				);
+
+				case RemoteCallResult.Degraded(var ex) -> log.warn(
+						"Сервис склада недоступен при отмене резерва товара {}",
+						request.productId(),
+						ex
+				);
+			}
+		} catch (Exception ex) {
+			log.error(
+					"Неожиданная ошибка при отмене резерва товара {}",
+					request.productId(),
+					ex
+			);
 		}
 	}
 
-	private ReserveResponse releaseReservedProduct(ReserveRequest request) {
+	@NonNull
+	private <T> RemoteCallResult<T> executeRemoteCall(@NonNull Supplier<T> action) {
 		try {
-			return inventoryClient.releaseProduct(request);
-		} catch (FeignException e) {
-			throw ExceptionMapper.mapInventoryException(e)
-					.orElseThrow(() ->
-							new RuntimeException(
-									"Не удалось отменить резервирование товара с id=%s"
-											.formatted(request.productId())
-							)
-					);
-		}
-	}
+			return new RemoteCallResult.Success<>(action.get());
 
-	private ProductDto getProductById(long productId) {
-		try {
-			return productClient.getProductById(productId);
-		} catch (FeignException e) {
-			throw ExceptionMapper.mapProductException(e)
-					.orElseThrow(() ->
-							new RuntimeException(
-									"Не удалось получить данные товара с id=%s"
-											.formatted(productId)
-							)
-					);
+		} catch (OrderProcessingException ex) {
+			return new RemoteCallResult.Failure<>(ex.getMessage());
+
+		} catch (ServiceUnavailableException ex) {
+			return new RemoteCallResult.Degraded<>(ex);
 		}
 	}
 }

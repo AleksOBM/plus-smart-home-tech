@@ -3,9 +3,10 @@ package ru.yandex.practicum.order.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
-import ru.yandex.practicum.order.dto.data.OrderData;
 import ru.yandex.practicum.order.dto.OrderDto;
+import ru.yandex.practicum.order.dto.data.OrderData;
 import ru.yandex.practicum.order.entity.Order;
+import ru.yandex.practicum.order.entity.OrderItem;
 import ru.yandex.practicum.order.entity.OrderStatus;
 import ru.yandex.practicum.order.exception.NotFoundException;
 import ru.yandex.practicum.order.mapper.OrderItemMapper;
@@ -46,27 +47,36 @@ public class OrderServiceImpl implements OrderService {
 
 	@Override
 	public OrderDto createOrder(@NonNull OrderData orderData) {
-		var totalPrice = orderData.items().stream()
-				.map(itemRequest -> itemRequest.price()
-						.multiply(BigDecimal.valueOf(itemRequest.quantity()))
-				)
+
+		if (orderData.status() == OrderStatus.PENDING_CONFIRMATION) {
+			var existingOrder = orderRepository.findByCustomerEmailAndStatus(
+					orderData.customerEmail(),
+					OrderStatus.PENDING_CONFIRMATION
+			);
+
+			if (existingOrder.isPresent()) {
+				return OrderMapper.toDto(existingOrder.get());
+			}
+		}
+
+		BigDecimal totalPrice = orderData.items().stream()
+				.map(item -> item.price()
+						.multiply(BigDecimal.valueOf(item.quantity())))
 				.reduce(BigDecimal.ZERO, BigDecimal::add);
 
-		var orderWithoutItems = orderRepository.save(Order.builder()
+		Order order = Order.builder()
 				.customerName(orderData.customerName())
 				.customerEmail(orderData.customerEmail())
+				.status(orderData.status())
+				.statusDetails(orderData.statusDetails())
 				.totalPrice(totalPrice)
-				.build()
-		);
-
-		var order = orderWithoutItems.toBuilder()
-				.items(orderData.items().stream()
-						.map(itemData ->
-								OrderItemMapper.toEntity(itemData, orderWithoutItems))
-						.toList()
-				)
-				.status(OrderStatus.CONFIRMED)
 				.build();
+
+		List<OrderItem> items = orderData.items().stream()
+				.map(item -> OrderItemMapper.toEntity(item, order))
+				.toList();
+
+		order.setItems(items);
 
 		return OrderMapper.toDto(orderRepository.save(order));
 	}

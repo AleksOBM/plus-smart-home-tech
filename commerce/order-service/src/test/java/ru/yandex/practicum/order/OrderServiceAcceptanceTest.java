@@ -36,16 +36,16 @@ class OrderServiceAcceptanceTest {
         CreateOrderRequest request = new CreateOrderRequest(
                 "Acceptance Buyer",
                 "acceptance-buyer@example.com",
-                List.of(
-                        new OrderItemRequest(1L, "Acceptance Smart Lamp", 2, new BigDecimal("3490.00")),
-                        new OrderItemRequest(2L, "Acceptance Smart Plug", 1, new BigDecimal("1290.00"))
+                List.of(new OrderItemRequest(1L, 2),
+                        new OrderItemRequest(2L, 1)
                 )
         );
 
         MvcResult createResponse = postJson("/api/orders", request);
 
         assertThat(status(createResponse))
-                .as("POST /api/orders должен создавать заказ и возвращать HTTP 201 Created")
+                .as("POST /api/orders должен создавать заказ и возвращать " +
+                        "HTTP 201 Created")
                 .isEqualTo(201);
         Map<String, Object> created = readMap(createResponse);
         Long orderId = asLong(created.get("id"));
@@ -98,7 +98,8 @@ class OrderServiceAcceptanceTest {
         MvcResult response = postJson("/api/orders", invalidRequest);
 
         assertThat(status(response))
-                .as("POST /api/orders с невалидным телом запроса должен возвращать HTTP 400 Bad Request")
+                .as("POST /api/orders с невалидным телом запроса должен возвращать " +
+                        "HTTP 400 Bad Request")
                 .isEqualTo(400);
         assertThat(readMap(response))
                 .as("Ответ ошибки должен содержать сообщение и детали валидации")

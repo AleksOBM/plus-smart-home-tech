@@ -9,23 +9,17 @@ import java.util.Optional;
 @UtilityClass
 public class ExceptionMapper {
 
-	public Optional<OrderProcessingException> mapProductException(@NonNull FeignException exception) {
-		if (exception.status() == 404) {
-			return Optional.of(new OrderProcessingException(exception.getMessage()));
-		}
-
-		return Optional.empty();
+	public RuntimeException mapInventoryException(@NonNull FeignException ex, long productId) {
+		return switch (ex.status()) {
+			case 404, 409 -> new OrderProcessingException(ex.getMessage());
+			default -> new InventoryServiceUnavailableException(productId, ex);
+		};
 	}
 
-	public Optional<OrderProcessingException> mapInventoryException(@NonNull FeignException exception) {
-		if (exception.status() == 404) {
-			return Optional.of(new OrderProcessingException(exception.getMessage()));
+	public RuntimeException mapProductException(@NonNull FeignException ex, long productId) {
+		if (ex.status() == 404) {
+			return new OrderProcessingException(ex.getMessage());
 		}
-
-		if (exception.status() == 409) {
-			return Optional.of(new OrderProcessingException(exception.getMessage()));
-		}
-
-		return Optional.empty();
+		return new ProductServiceUnavailableException(productId, ex);
 	}
 }
