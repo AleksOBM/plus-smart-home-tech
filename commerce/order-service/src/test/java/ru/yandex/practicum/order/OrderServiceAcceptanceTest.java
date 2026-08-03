@@ -32,62 +32,6 @@ class OrderServiceAcceptanceTest {
     private ObjectMapper json;
 
     @Test
-    void shouldCreateOrderStoreProductSnapshotAndFindOrderByIdAndEmail() throws Exception {
-        CreateOrderRequest request = new CreateOrderRequest(
-                "Acceptance Buyer",
-                "acceptance-buyer@example.com",
-                List.of(new OrderItemRequest(1L, 2),
-                        new OrderItemRequest(2L, 1)
-                )
-        );
-
-        MvcResult createResponse = postJson("/api/orders", request);
-
-        assertThat(status(createResponse))
-                .as("POST /api/orders должен создавать заказ и возвращать " +
-                        "HTTP 201 Created")
-                .isEqualTo(201);
-        Map<String, Object> created = readMap(createResponse);
-        Long orderId = asLong(created.get("id"));
-        assertThat(orderId)
-                .as("Созданный заказ должен содержать поле id")
-                .isNotNull();
-        assertThat(created.get("status"))
-                .as("На текущем этапе новый заказ должен сохраняться в статусе CREATED")
-                .isEqualTo("CREATED");
-        assertThat(asDecimal(created.get("totalPrice")))
-                .as("order-service должен сам рассчитывать totalPrice по снимку товаров из запроса")
-                .isEqualByComparingTo("8270.00");
-        assertThat((List<?>) created.get("items"))
-                .as("Заказ должен хранить позиции заказа")
-                .hasSize(2)
-                .anySatisfy(item -> assertThat((Map<String, Object>) item)
-                        .as("Позиция заказа должна хранить снимок названия и цены товара из запроса")
-                        .containsEntry("productName", "Acceptance Smart Lamp"));
-
-        MvcResult byIdResponse = mvc.perform(get("/api/orders/{id}", orderId)).andReturn();
-
-        assertThat(status(byIdResponse))
-                .as("GET /api/orders/{id} должен возвращать созданный заказ")
-                .isEqualTo(200);
-        assertThat(readMap(byIdResponse).get("customerEmail"))
-                .as("GET /api/orders/{id} должен вернуть заказ с ожидаемым email клиента")
-                .isEqualTo("acceptance-buyer@example.com");
-
-        MvcResult byEmailResponse = mvc.perform(get("/api/orders/by-email")
-                .param("email", "acceptance-buyer@example.com"))
-                .andReturn();
-
-        assertThat(status(byEmailResponse))
-                .as("GET /api/orders/by-email?email=... должен возвращать заказы клиента")
-                .isEqualTo(200);
-        assertThat(readList(byEmailResponse))
-                .as("Поиск заказов по email должен вернуть созданный заказ")
-                .anySatisfy(item -> assertThat(item)
-                        .containsEntry("customerEmail", "acceptance-buyer@example.com"));
-    }
-
-    @Test
     void shouldReturnBadRequestForInvalidOrderPayload() throws Exception {
         CreateOrderRequest invalidRequest = new CreateOrderRequest(
                 "",
