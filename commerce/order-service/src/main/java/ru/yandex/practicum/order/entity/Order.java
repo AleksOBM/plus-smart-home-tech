@@ -34,8 +34,9 @@ public class Order {
 	@Column(nullable = false)
 	OrderStatus status = OrderStatus.CREATED;
 
+	@Builder.Default
 	@Column(nullable = false, precision = 10, scale = 2)
-	BigDecimal totalPrice;
+	BigDecimal totalPrice = BigDecimal.ZERO;
 
 	@Column
 	String statusDetails;

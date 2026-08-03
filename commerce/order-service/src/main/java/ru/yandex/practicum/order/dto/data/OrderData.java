@@ -1,13 +1,16 @@
 package ru.yandex.practicum.order.dto.data;
 
 import lombok.Builder;
+import ru.yandex.practicum.order.entity.OrderStatus;
 
-import java.util.List;
+import java.util.Collection;
 
 @Builder
 public record OrderData(
 		String customerName,
 		String customerEmail,
-		List<OrderItemData> items
+		OrderStatus status,
+		String statusDetails,
+		Collection<OrderItemData> items
 ) {
 }

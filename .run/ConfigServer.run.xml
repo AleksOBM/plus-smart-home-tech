@@ -1,5 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="ConfigServer" type="Spring Boot" factoryName="Spring Boot" nameIsGenerated="true">
+  <configuration default="false" name="ConfigServer" type="Spring Boot" factoryName="Spring Boot" folderName="cloud" nameIsGenerated="true">
     <option name="MAIN_CLASS_NAME" value="ru.yandex.practicum.infra.config.ConfigServer" />
     <module name="config-server" />
     <option name="WORKING_DIRECTORY" value="./infra/config-server" />

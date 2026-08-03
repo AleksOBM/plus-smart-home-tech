@@ -1,8 +1,8 @@
 package ru.yandex.practicum.order.service;
 
 import org.springframework.transaction.annotation.Transactional;
-import ru.yandex.practicum.order.dto.data.OrderData;
 import ru.yandex.practicum.order.dto.OrderDto;
+import ru.yandex.practicum.order.dto.data.OrderData;
 
 import java.util.List;
 
