@@ -16,3 +16,4 @@ spring:
             - file:../config-repo
             - file:../config-repo/telemetry
             - file:../config-repo/commerce
+            - file:../config-repo/infra

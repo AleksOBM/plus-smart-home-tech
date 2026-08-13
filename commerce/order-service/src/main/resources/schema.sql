@@ -2,7 +2,8 @@ CREATE TABLE IF NOT EXISTS orders (
         id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
         customer_name VARCHAR(255) NOT NULL,
         customer_email VARCHAR(255) NOT NULL,
-        status VARCHAR(255) NOT NULL CHECK (status in ('UNDEFINED','CREATED','IN_PROGRESS','COMPLETED')),
+        status VARCHAR(255) NOT NULL
+            CHECK (status in ('CREATED','CONFIRMED','PENDING_CONFIRMATION')),
         total_price NUMERIC(10,2) NOT NULL,
         status_details VARCHAR(255),
         created_at TIMESTAMP(3) NOT NULL
@@ -20,4 +21,3 @@ CREATE TABLE IF NOT EXISTS order_items (
                 REFERENCES orders (id) MATCH SIMPLE
                 ON DELETE CASCADE
     );
-
