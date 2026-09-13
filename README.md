@@ -23,23 +23,23 @@
 ```mermaid
 mindmap
   root((API))
-    CategoryController 🌐/api/categories
+    🌐/api/categories
         GET /api/categories
         GET /api/categories/:id
         POST /api/categories
-    InventoryController 🌐/api/inventory
+    🌐/api/inventory
         GET /api/inventory
         GET /api/inventory/:productId
         POST /api/inventory
         POST /api/inventory/reserve
         POST /api/inventory/release
         PUT /api/inventory
-    OrderController 🌐/api/orders
+    🌐/api/orders
         GET /api/orders
         GET /api/orders/:id
         GET /api/orders/by-email
         POST /api/orders
-    ProductController 🌐/api/products
+    🌐/api/products
         GET /api/products
         GET /api/products/:id
         GET /api/products/category/:categoryId
