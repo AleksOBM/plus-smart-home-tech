@@ -146,12 +146,12 @@ public class OrderOrchestrationServiceImpl implements OrderOrchestrationService 
 
 		log.debug("Проверка товара");
 		if (!productDto.active()) {
-			log.debug("Товар с id={} товар снят с продажи", context.productId());
+			log.debug("Товар с id={} снят с продажи", context.productId());
 			if (!requests.isEmpty()) {
 				releaseReservedProducts(requests);
 			}
 			throw new OrderProcessingException(
-					"Товар с id=%s товар снят с продажи".formatted(context.productId())
+					"Товар с id=%s снят с продажи".formatted(context.productId())
 			);
 		}
 

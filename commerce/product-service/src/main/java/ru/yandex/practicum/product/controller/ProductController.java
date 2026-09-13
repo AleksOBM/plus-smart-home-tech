@@ -14,7 +14,6 @@ import ru.yandex.practicum.product.service.ProductService;
 import java.util.List;
 
 @Slf4j
-@SuppressWarnings("similarLog")
 @RestController
 @RequestMapping("/api/products")
 @RequiredArgsConstructor
@@ -41,6 +40,7 @@ public class ProductController {
 	 */
 	@GetMapping("/{id}")
 	public ProductDto getProductById(@PathVariable Long id) {
+		//noinspection LoggingSimilarMessage
 		log.info("GET /api/products/{}", id);
 		return productService.getProductById(id);
 	}

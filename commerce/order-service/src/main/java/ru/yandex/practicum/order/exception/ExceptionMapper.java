@@ -4,8 +4,6 @@ import feign.FeignException;
 import lombok.NonNull;
 import lombok.experimental.UtilityClass;
 
-import java.util.Optional;
-
 @UtilityClass
 public class ExceptionMapper {
 
@@ -22,4 +20,5 @@ public class ExceptionMapper {
 		}
 		return new ProductServiceUnavailableException(productId, ex);
 	}
+
 }
