@@ -21,6 +21,7 @@
 
 ### Http API
 ```mermaid
+%%{init: { 'mindmap': { 'maxNodeWidth': 500 } }}%%
 mindmap
   root((API))
     🌐/api/categories
